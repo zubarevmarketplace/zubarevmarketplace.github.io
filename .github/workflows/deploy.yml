@@ -22,6 +22,17 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Copy SEO files to dist
+        run: |
+          if [ -f robots.txt ]; then cp robots.txt dist/; fi
+          if [ -f sitemap.xml ]; then cp sitemap.xml dist/; fi
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
