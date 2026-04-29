@@ -1014,6 +1014,7 @@ export default function App() {
                     caseStudies[selectedCase].company === 'Ivalar' ? 'w-36 h-36' :
                     caseStudies[selectedCase].company === 'Ким Медикал' ? 'w-32 h-32 rounded-xl bg-white/95 p-3' :
                     'w-28 h-28'
+					loading="lazy"
                   }`}
                 />
                 <h3 className="text-4xl">{caseStudies[selectedCase].company}</h3>
@@ -1233,6 +1234,7 @@ export default function App() {
                 src={authorPhoto}
                 alt="Консультант по маркетплейсам"
                 className="w-full h-[650px] object-cover object-[center_20%]"
+				loading="lazy"
               />
             </div>
           </div>
@@ -1271,6 +1273,7 @@ export default function App() {
                   src={authorPhoto}
                   alt="Консультант по маркетплейсам"
                   className="w-full h-[400px] object-cover object-[center_20%]"
+				  loading="lazy"
                 />
               </div>
             </div>
@@ -1421,7 +1424,7 @@ export default function App() {
               Написать в Max
             </a>
             <a
-              href="https://wa.me/qr/E2X4HI3GHMPQF1"
+              href="https://wa.me/79046320024"
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 md:px-8 md:py-4 bg-[#1ea855] hover:bg-[#188f48] rounded-2xl transition-all shadow-lg flex items-center gap-2.5 md:gap-3 w-full sm:w-auto justify-center text-sm md:text-base"
@@ -1504,7 +1507,7 @@ export default function App() {
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail className="w-4 h-4 text-cyan-400" />
-                  <span>Email: zubarev.marketplace@gmail.ru</span>
+                  <span>Email: zubarev.marketplace@gmail.com</span>
                 </li>
               </ul>
             </div>
