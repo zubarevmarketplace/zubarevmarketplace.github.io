@@ -1014,8 +1014,8 @@ export default function App() {
                     caseStudies[selectedCase].company === 'Ivalar' ? 'w-36 h-36' :
                     caseStudies[selectedCase].company === 'Ким Медикал' ? 'w-32 h-32 rounded-xl bg-white/95 p-3' :
                     'w-28 h-28'
-					loading="lazy"
                   }`}
+				  loading="lazy"
                 />
                 <h3 className="text-4xl">{caseStudies[selectedCase].company}</h3>
               </div>
