@@ -532,7 +532,7 @@ export default function WbCalculatorPage() {
                     open={showCommissionDetails}
                     onToggle={() => setShowCommissionDetails((v) => !v)}
                   />
-                  <Reveal show={showCommissionDetails}>
+                  {showCommissionDetails && (
                     <>
                       {r.commissionBreakdown.grossWbCommission !== 0 && (
                         <SubRow
@@ -547,14 +547,14 @@ export default function WbCalculatorPage() {
                         />
                       )}
                     </>
-                  </Reveal>
+                  )}
                   <ExpandableRow
                     label="Логистика WB"
                     value={-r.logistics}
                     open={showLogisticsDetails}
                     onToggle={() => setShowLogisticsDetails((v) => !v)}
                   />
-                  <Reveal show={showLogisticsDetails}>
+                  {showLogisticsDetails && (
                     <>
                       <SubRow
                         label="Базовая логистика"
@@ -586,7 +586,7 @@ export default function WbCalculatorPage() {
                           />
                         )}
                     </>
-                  </Reveal>
+                  )}
                   {r.storage > 0 && (
                     <Row label="Хранение WB" value={-r.storage} />
                   )}
