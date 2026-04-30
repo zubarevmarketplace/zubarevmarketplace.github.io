@@ -17,10 +17,10 @@ export default function Header({ currentPage }: HeaderProps) {
 
   return (
     <>
-      <nav className="relative z-50 px-4 md:px-8 py-6 flex items-center justify-between max-w-[1400px] mx-auto border-b border-white/5">
+      <nav className="relative z-50 px-4 md:px-8 py-6 flex items-center justify-between max-w-[1400px] mx-auto border-b border-white/5 lg:px-10">
         <a href="/" className="text-xl tracking-tight">NZ</a>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-8 lg:gap-10 ml-auto pl-10">
           {landingLinks.map((link) => (
             <a key={link.label} href={link.href} className="text-sm text-white/60 hover:text-white/90 transition-colors">
               {link.label}
@@ -37,10 +37,7 @@ export default function Header({ currentPage }: HeaderProps) {
           </a>
         </div>
 
-        <div className="flex md:hidden items-center gap-4">
-          <a href="/#contacts" className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm transition-all">
-            Связаться
-          </a>
+        <div className="flex md:hidden items-center">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-white/60 hover:text-white/90 transition-colors"
