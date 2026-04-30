@@ -986,7 +986,7 @@ function Segmented({
     options.findIndex((o) => o[0] === value),
   );
   return (
-    <div className="relative inline-grid grid-cols-2 p-1 rounded-xl border border-white/10 bg-white/[0.03]">
+    <div className="relative inline-grid grid-cols-2 p-1 rounded-xl border border-white/10 bg-white/[0.03] transition-all duration-200 hover:border-cyan-400/35 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.14),0_10px_26px_rgba(6,182,212,0.08)]">
       <div
         className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-cyan-500/20 border border-cyan-400/30 transition-transform duration-300 ${i === 1 ? "translate-x-full" : ""}`}
       />
@@ -994,7 +994,7 @@ function Segmented({
         <button
           key={k}
           onClick={() => onChange(k)}
-          className={`relative z-10 px-4 py-2 text-sm ${value === k ? "text-cyan-200" : "text-white/65"}`}
+          className={`relative z-10 px-4 py-2 text-sm rounded-lg transition-all duration-200 ${value === k ? "text-cyan-200" : "text-white/65 hover:text-cyan-100 hover:bg-cyan-500/10"}`}
         >
           {l}
         </button>
