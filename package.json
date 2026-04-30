@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "generate:wb-tariffs": "tsx scripts/generate-wb-tariffs.ts"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -61,13 +62,15 @@
     "sonner": "2.0.3",
     "tailwind-merge": "3.2.0",
     "tw-animate-css": "1.3.8",
-    "vaul": "1.1.2"
+    "vaul": "1.1.2",
+    "xlsx": "0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
     "@vitejs/plugin-react": "4.7.0",
     "tailwindcss": "4.1.12",
-    "vite": "6.3.5"
+    "vite": "6.3.5",
+    "tsx": "4.20.3"
   },
   "peerDependencies": {
     "react": "18.3.1",
