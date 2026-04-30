@@ -9,7 +9,7 @@ import type { CalculatorInput, CalculatorMode, ResultMode, TaxMode } from '../ty
 const initial: CalculatorInput = {
   categoryId: 'home', salePrice: 2500, costPrice: 900, lengthCm: 30, widthCm: 20, heightCm: 10,
   geoPresetId: 'allRussia', includeAds: true, adRate: 0.1, includeTaxes: true, taxMode: 'usn6', taxRate: 6,
-  includeFulfillment: false, includeDeliveryToWb: false, manualKvv: 18, manualBuyoutRate: 90, manualLocalOrderShare: 50,
+  includeFulfillment: false, includeDeliveryToWb: false, manualFboCommissionRate: 18, manualFbsCommissionRate: 21.5, manualBuyoutRate: 90, manualLocalOrderShare: 100,
   manualStorageDays: 30, manualDeliveryToWbPerUnit: 0, packagingCost: 0, manualFulfillmentCost: 20, otherCosts: 0,
 };
 
@@ -62,7 +62,7 @@ export default function WbCalculatorPage() {
         <div className="xl:col-span-6 p-5 md:p-6 bg-white/[0.03] border border-white/10 rounded-3xl space-y-3">
           {!isAdvanced && <Field label="Категория товара" tip="Комиссия WB от цены продажи. В простом режиме берётся среднее значение по категории."><CustomSelect value={input.categoryId} onChange={(v) => setInput((p) => ({ ...p, categoryId: v }))} options={categories.map(c => ({ value: c.id, label: c.label }))} /></Field>}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Field label="Цена продажи на WB" tip={tips.sale}><NumberInput value={input.salePrice} onChange={(v) => setInput((p) => ({ ...p, salePrice: v }))} min={1} max={1_000_000} /></Field>
+            <Field label="Цена для покупателя на WB" tip={tips.sale}><NumberInput value={input.salePrice} onChange={(v) => setInput((p) => ({ ...p, salePrice: v }))} min={1} max={1_000_000} /></Field>
             <Field label="Себестоимость товара" tip={tips.cost}><NumberInput value={input.costPrice} onChange={(v) => setInput((p) => ({ ...p, costPrice: v }))} min={0} max={1_000_000} /></Field>
           </div>
           <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-2 items-center">
@@ -72,7 +72,9 @@ export default function WbCalculatorPage() {
             <span className="text-cyan-300 pt-6">×</span>
             <Field label="Высота, см" tip={tips.dims}><NumberInput value={input.heightCm} onChange={(v) => setInput((p) => ({ ...p, heightCm: v }))} min={0.1} max={300} step={0.1} /></Field>
           </div>
-          <Field label="Куда планируете поставлять товар?" tip={tips.geo}><CustomSelect value={input.geoPresetId} onChange={(v) => setInput((p) => ({ ...p, geoPresetId: v as CalculatorInput['geoPresetId'] }))} options={Object.entries(geoPresets).map(([value, g]) => ({ value, label: g.label }))} /></Field>
+          
+          <Field label="Вес, кг"><NumberInput value={input.weightKg} onChange={(v) => setInput((p) => ({ ...p, weightKg: v }))} min={0} max={500} step={0.1} /></Field>
+<Field label="Куда планируете поставлять товар?" tip={tips.geo}><CustomSelect value={input.geoPresetId} onChange={(v) => setInput((p) => ({ ...p, geoPresetId: v as CalculatorInput['geoPresetId'] }))} options={Object.entries(geoPresets).map(([value, g]) => ({ value, label: g.label }))} /></Field>
 
           {!isAdvanced && <>
             <CompactToggle label="Учитывать рекламу" checked={input.includeAds} onChange={(v) => setInput((p) => ({ ...p, includeAds: v }))} />
@@ -85,7 +87,7 @@ export default function WbCalculatorPage() {
           </>}
 
           <Reveal show={isAdvanced}><div className="pt-3 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Field label="Комиссия WB, %" tip="Комиссия Wildberries от цены продажи. В простом режиме берётся среднее значение по категории, в расширенном режиме вы можете указать её вручную."><NumberInput value={input.manualKvv} onChange={(v) => setInput((p) => ({ ...p, manualKvv: v }))} min={0} max={100} /></Field>
+            <Field label="Комиссия WB, %" tip="Комиссия Wildberries от цены продажи. В простом режиме берётся среднее значение по категории, в расширенном режиме вы можете указать её вручную."><NumberInput value={input.manualFboCommissionRate} onChange={(v) => setInput((p) => ({ ...p, manualFboCommissionRate: v }))} min={0} max={100} /></Field>
             <Field label="ДРР, %" tip="Доля рекламных расходов от цены продажи. Для активного запуска часто закладывают 20%, для поддержания продаж — 10%."><NumberInput value={input.adRate * 100} onChange={(v) => setInput((p) => ({ ...p, adRate: v / 100 }))} min={0} max={100} /></Field>
             <Field label="Доля выкупа, %" tip="Для одежды, обуви и размерных товаров часто ставят 30–50%. Для обычной товарки — 80–95%."><NumberInput value={input.manualBuyoutRate} onChange={(v) => setInput((p) => ({ ...p, manualBuyoutRate: v }))} min={0} max={100} /></Field>
             <Field label="Локализация продаж, %" tip="Рекомендую ставить 50%, если вы сомневаетесь, что выбрать. У большинства продавцов локализация ниже 100%, особенно если товар распределён по складам неравномерно."><NumberInput value={input.manualLocalOrderShare} onChange={(v) => setInput((p) => ({ ...p, manualLocalOrderShare: v }))} min={0} max={100} /></Field>
@@ -101,9 +103,9 @@ export default function WbCalculatorPage() {
 
         <div className={`xl:col-span-6 p-5 md:p-6 bg-white/[0.03] border rounded-3xl space-y-4 transition-all duration-300 ${flash ? 'border-cyan-400/40 shadow-[0_0_0_1px_rgba(34,211,238,0.15)]' : 'border-white/10'}`}>
           <div className="flex items-center justify-between"><h2 className="text-lg">Результат</h2><Segmented value={resultMode} onChange={(v) => setResultMode(v as ResultMode)} options={[['fbo', 'FBO'], ['fbs', 'FBS']]} /></div>
-          <div className="grid grid-cols-2 gap-3"><Metric label="Цена на WB" value={<AnimatedNumber value={r.salePrice} type='currency' />} /><Metric label="Прибыль" value={<AnimatedNumber value={r.profit} type='currency' />} tone={r.profit >= 0 ? 'good' : 'bad'} /><Metric label="Маржа" value={<AnimatedNumber value={r.margin} type='percent' />} /><Metric label="ROI" value={r.roi === null ? '—' : <AnimatedNumber value={r.roi} type='percent' />} /></div>
-          <div className="p-4 rounded-2xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-white/[0.02]"><div className="text-xs text-white/60">Сумма всех расходов</div><div className="text-2xl"><AnimatedNumber value={totalExpenses} type='currency' /></div></div>
-          <div className="rounded-2xl border border-white/10 overflow-hidden bg-[#0B131A]/70"><table className="w-full text-sm"><tbody>{rows.map(([label, val, show, strong]) => show ? <Row key={label} label={label} value={val} strong={!!strong} /> : null)}</tbody></table></div>
+          {r.isSgt && <div className="p-3 rounded-xl border border-red-400/40 bg-red-500/10 text-red-200 text-sm">Калькулятор не считает корректно сверхгабаритные товары. Для СГТ действуют отдельные тарифы и условия логистики.</div>}<div className="grid grid-cols-2 gap-3"><Metric label="Цена на WB" value={<AnimatedNumber value={r.salePrice} type='currency' />} /><Metric label="Прибыль" value={<AnimatedNumber value={r.profit} type='currency' />} tone={r.profit >= 0 ? 'good' : 'bad'} /><Metric label="Маржа" value={<AnimatedNumber value={r.margin} type='percent' />} /><Metric label="ROI" value={r.roi === null ? '—' : <AnimatedNumber value={r.roi} type='percent' />} /></div>
+          <div className="p-4 rounded-2xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-white/[0.02]"><div className="text-xs text-white/60">Сумма всех расходов</div><div className="text-2xl"><AnimatedNumber value={r.totalExpenses} type='currency' /></div></div>
+          <div className="rounded-2xl border border-white/10 overflow-hidden bg-[#0B131A]/70"><table className="w-full text-sm"><tbody><Row label="Цена на WB" value={r.salePrice} /><Row label="Себестоимость" value={-r.costPrice} /><Row label="Комиссия WB + эквайринг" value={-r.commission} /><SubRow label="Комиссия по тарифу" value={-r.commissionBreakdown.grossWbCommission} /><SubRow label="Корректировка на скидку WB/СПП" value={r.commissionBreakdown.platformDiscountAmount} /><SubRow label="Эквайринг" value={-r.commissionBreakdown.acquiringCost} /><Row label="Логистика WB" value={-r.logistics} /><SubRow label="Базовая логистика" value={-r.logisticsBreakdown.baseLogistics} /><SubRow label="Обратная логистика по невыкупу" value={-r.logisticsBreakdown.reverseLogisticsPerSoldUnit} />{resultMode==='fbo' && <><SubRow label="Коэффициенты складов" value={-r.logisticsBreakdown.warehouseCoefficientExtra} /><SubRow label="Локализация" value={-r.logisticsBreakdown.localizationExtra} /></>}{r.storage>0 && <Row label="Хранение WB" value={-r.storage} />}{r.processing>0 && <Row label="Обработка FBS" value={-r.processing} />}{r.adCost>0 && <Row label="Реклама" value={-r.adCost} />}{r.tax>0 && <Row label="Налог" value={-r.tax} />}{r.deliveryToWb>0 && <Row label="Доставка до WB" value={-r.deliveryToWb} />}{r.fulfillment>0 && <Row label="Фулфилмент" value={-r.fulfillment} />}{r.packaging>0 && <Row label="Упаковка" value={-r.packaging} />}{r.otherCosts>0 && <Row label="Прочие расходы" value={-r.otherCosts} />}<Row label="Прибыль с учётом выкупа" value={r.profit} strong /></tbody></table></div>
         </div>
       </div>
     </section>
@@ -178,3 +180,4 @@ function Reveal({ show, children }: { show: boolean; children: React.ReactNode }
 function AnimatedNumber({ value, type }: { value: number; type: 'currency' | 'percent' }) { const [d, setD] = useState(value); const prev = useRef(value); useEffect(() => { const s = prev.current, e = value, st = performance.now(), dur = 420; let raf = 0; const tick = (t: number) => { const p = Math.min((t - st) / dur, 1); setD(s + (e - s) * (1 - Math.pow(1 - p, 3))); if (p < 1) raf = requestAnimationFrame(tick); }; raf = requestAnimationFrame(tick); prev.current = e; return () => cancelAnimationFrame(raf); }, [value]); return <>{type === 'currency' ? formatCurrency(d) : formatPercent(d)}</>; }
 function Metric({ label, value, tone }: { label: string; value: React.ReactNode; tone?: 'good' | 'bad' }) { const c = tone === 'good' ? 'text-green-300' : tone === 'bad' ? 'text-red-300' : 'text-white'; return <div className='p-4 rounded-2xl border border-white/10 bg-[#0C141B]'><div className='text-xs text-white/60 mb-1'>{label}</div><div className={`text-2xl ${c}`}>{value}</div></div>; }
 function Row({ label, value, strong = false }: { label: string; value: number; strong?: boolean }) { return <tr className={`border-b border-white/5 ${strong ? 'bg-cyan-500/10' : ''}`}><td className='px-3 py-2 text-white/70'>{label}</td><td className={`px-3 py-2 text-right ${strong ? 'text-cyan-200 font-semibold' : 'text-white/90'}`}><AnimatedNumber value={value} type='currency' /></td></tr>; }
+function SubRow({ label, value }: { label: string; value: number }) { return <tr className='border-b border-white/5'><td className='px-6 py-1.5 text-white/50 text-xs'>— {label}</td><td className='px-3 py-1.5 text-right text-white/70 text-xs'><AnimatedNumber value={value} type='currency' /></td></tr>; }
