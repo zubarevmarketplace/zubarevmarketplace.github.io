@@ -5,11 +5,15 @@ type HeaderProps = {
   currentPage: 'home' | 'calculator';
 };
 
+const landingLinks = [
+  { href: '/#about', label: 'Обо мне' },
+  { href: '/#formats', label: 'Услуги' },
+  { href: '/#cases', label: 'Кейсы' },
+  { href: '/#contacts', label: 'Контакты' },
+];
+
 export default function Header({ currentPage }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const linkClass = (isActive: boolean) =>
-    `text-sm transition-colors ${isActive ? 'text-white' : 'text-white/60 hover:text-white/90'}`;
 
   return (
     <>
@@ -17,9 +21,17 @@ export default function Header({ currentPage }: HeaderProps) {
         <a href="/" className="text-xl tracking-tight">NZ</a>
 
         <div className="hidden md:flex items-center gap-8">
-          <a href="/" className={linkClass(currentPage === 'home')}>Главная</a>
-          <a href="/tools/wb-calculator" className={linkClass(currentPage === 'calculator')}>Калькулятор</a>
-          <a href="/#about" className="text-sm text-white/60 hover:text-white/90 transition-colors">Обо мне</a>
+          {landingLinks.map((link) => (
+            <a key={link.label} href={link.href} className="text-sm text-white/60 hover:text-white/90 transition-colors">
+              {link.label}
+            </a>
+          ))}
+          <a
+            href="/tools/wb-calculator"
+            className={`text-sm transition-colors ${currentPage === 'calculator' ? 'text-white' : 'text-white/60 hover:text-white/90'}`}
+          >
+            Калькулятор
+          </a>
           <a href="/#contacts" className="px-5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm transition-all">
             Связаться
           </a>
@@ -42,10 +54,30 @@ export default function Header({ currentPage }: HeaderProps) {
       {mobileMenuOpen && (
         <div className="md:hidden fixed top-[73px] left-0 right-0 z-40 bg-[#050A0E]/95 backdrop-blur-lg border-b border-white/5">
           <div className="px-8 py-6 space-y-4">
-            <a href="/" onClick={() => setMobileMenuOpen(false)} className={linkClass(currentPage === 'home') + ' block py-2'}>Главная</a>
-            <a href="/tools/wb-calculator" onClick={() => setMobileMenuOpen(false)} className={linkClass(currentPage === 'calculator') + ' block py-2'}>Калькулятор</a>
-            <a href="/#about" onClick={() => setMobileMenuOpen(false)} className="block text-white/60 hover:text-white/90 transition-colors py-2">Обо мне</a>
-            <a href="/#contacts" onClick={() => setMobileMenuOpen(false)} className="block text-white/60 hover:text-white/90 transition-colors py-2">Контакты</a>
+            {landingLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-white/60 hover:text-white/90 transition-colors py-2"
+              >
+                {link.label}
+              </a>
+            ))}
+            <a
+              href="/tools/wb-calculator"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`block transition-colors py-2 ${currentPage === 'calculator' ? 'text-white' : 'text-white/60 hover:text-white/90'}`}
+            >
+              Калькулятор
+            </a>
+            <a
+              href="/#contacts"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-white/60 hover:text-white/90 transition-colors py-2"
+            >
+              Связаться
+            </a>
           </div>
         </div>
       )}
