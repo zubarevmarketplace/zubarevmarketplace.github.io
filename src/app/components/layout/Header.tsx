@@ -17,12 +17,12 @@ export default function Header({ currentPage }: HeaderProps) {
 
   return (
     <>
-      <nav className="relative z-50 px-4 md:px-8 py-6 flex items-center justify-between max-w-[1400px] mx-auto border-b border-white/5 lg:px-10">
+      <nav className="relative z-50 w-full px-4 md:px-10 lg:px-14 py-6 flex items-center justify-between border-b border-white/5">
         <a href="/" className="flex items-center" aria-label="На главную">
-          <img src="/favicon.svg" alt="Zubarev Lab" className="w-9 h-9" />
+          <img src="/favicon.svg" alt="Zubarev Lab" className="w-11 h-11" />
         </a>
 
-        <div className="hidden md:flex items-center gap-10 lg:gap-12 xl:gap-14 ml-auto pl-14 lg:pl-20">
+        <div className="hidden md:flex items-center gap-12 lg:gap-14 xl:gap-16 ml-auto">
           {landingLinks.map((link) => (
             <a key={link.label} href={link.href} className="text-sm text-white/60 hover:text-white/90 transition-colors whitespace-nowrap">
               {link.label}
@@ -39,7 +39,7 @@ export default function Header({ currentPage }: HeaderProps) {
           </a>
         </div>
 
-        <div className="flex md:hidden items-center">
+        <div className="flex md:hidden items-center ml-auto">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-white/60 hover:text-white/90 transition-colors"
