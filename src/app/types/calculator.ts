@@ -5,7 +5,9 @@ export type TaxMode = 'usn6' | 'usn15';
 
 export interface CalculatorInput {
   categoryId: string;
-  salePrice: number;
+  salePrice: number; // buyer price
+  platformDiscountRatePercent: number;
+  weightKg: number;
   costPrice: number;
   lengthCm: number;
   widthCm: number;
@@ -18,7 +20,8 @@ export interface CalculatorInput {
   taxRate: number;
   includeFulfillment: boolean;
   includeDeliveryToWb: boolean;
-  manualKvv: number;
+  manualFboCommissionRate: number;
+  manualFbsCommissionRate: number;
   manualBuyoutRate: number;
   manualLocalOrderShare: number;
   manualStorageDays: number;
@@ -28,5 +31,22 @@ export interface CalculatorInput {
   otherCosts: number;
 }
 
-export interface UnitEconomicsResult { model: ResultMode; salePrice: number; costPrice: number; commission: number; logistics: number; storage: number; processing: number; adCost: number; tax: number; fulfillment: number; deliveryToWb: number; packaging: number; otherCosts: number; profitBeforeTax: number; profit: number; margin: number; roi: number | null; breakEvenPrice: number; }
-export interface CalculationContext { volumeLiters: number; baseLogistics: number; itemsPerPallet: number; geoWarehouseCoefficient: number; deliveryToWbPerUnit: number; }
+export interface LogisticsBreakdown {
+  baseLogistics: number;
+  warehouseCoefficientExtra: number;
+  localizationExtra: number;
+  salesDistributionCost: number;
+  forwardLogistics: number;
+  reverseLogisticsBase: number;
+  reverseLogisticsPerSoldUnit: number;
+}
+
+export interface CommissionBreakdown {
+  grossWbCommission: number;
+  platformDiscountAmount: number;
+  netWbCommission: number;
+  acquiringCost: number;
+}
+
+export interface UnitEconomicsResult { model: ResultMode; salePrice: number; priceBeforeWbDiscount: number; platformDiscountAmount: number; costPrice: number; commission: number; logistics: number; storage: number; processing: number; adCost: number; tax: number; fulfillment: number; deliveryToWb: number; packaging: number; otherCosts: number; profitBeforeTax: number; profit: number; margin: number; roi: number | null; breakEvenPrice: number; totalExpenses: number; isSgt: boolean; commissionBreakdown: CommissionBreakdown; logisticsBreakdown: LogisticsBreakdown; }
+export interface CalculationContext { volumeLiters: number; baseLogistics: number; itemsPerPallet: number; geoWarehouseCoefficient: number; geoStorageCoefficient: number; deliveryToWbPerUnit: number; }
