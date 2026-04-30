@@ -19,7 +19,7 @@ export default function Header({ currentPage }: HeaderProps) {
     <>
       <nav className="relative z-50 max-w-[1400px] mx-auto px-5 md:px-8 lg:px-10 py-6 flex items-center justify-between border-b border-white/5">
         <a href="/" className="flex items-center lg:-translate-x-[300px]" aria-label="На главную">
-          <img src="/favicon.svg" alt="Zubarev Lab" className="w-14 h-14" />
+          <img src="/favicon.svg" alt="Zubarev Lab" className="w-[62px] h-[62px]" />
         </a>
 
         <div className="hidden md:flex items-center gap-10 lg:gap-12 xl:gap-14 ml-auto lg:translate-x-[100px]">
@@ -39,7 +39,7 @@ export default function Header({ currentPage }: HeaderProps) {
           </a>
         </div>
 
-        <div className="flex md:hidden items-center ml-auto">
+        <div className="flex md:hidden items-center">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-white/60 hover:text-white/90 transition-colors"
@@ -51,7 +51,7 @@ export default function Header({ currentPage }: HeaderProps) {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="md:hidden fixed top-[73px] left-0 right-0 z-40 bg-[#050A0E]/95 backdrop-blur-lg border-b border-white/5">
+        <div className="md:hidden fixed top-[88px] left-0 right-0 z-40 bg-[#050A0E]/95 backdrop-blur-lg border-b border-white/5">
           <div className="px-8 py-6 space-y-4">
             {landingLinks.map((link) => (
               <a
