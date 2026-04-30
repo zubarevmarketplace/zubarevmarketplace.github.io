@@ -16,7 +16,7 @@ export default function Footer() {
             <h4 className="text-sm mb-4 text-white/90">Навигация</h4>
             <ul className="space-y-2 text-sm text-white/60">
               <li><a href="/" className="hover:text-white/90 transition-colors">Главная</a></li>
-              <li><a href="/tools/wb-calculator" className="hover:text-white/90 transition-colors">Калькулятор</a></li>
+              <li><a href="/calculator" className="hover:text-white/90 transition-colors">Калькулятор</a></li>
               <li><a href="/#formats" className="hover:text-white/90 transition-colors">Услуги</a></li>
               <li><a href="/#cases" className="hover:text-white/90 transition-colors">Кейсы</a></li>
               <li><a href="/#contacts" className="hover:text-white/90 transition-colors">Контакты</a></li>
