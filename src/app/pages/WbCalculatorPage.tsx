@@ -66,6 +66,7 @@ export default function WbCalculatorPage() {
   const [input, setInput] = useState<CalculatorInput>(initial);
   const [flash, setFlash] = useState(false);
   const [showLogisticsDetails, setShowLogisticsDetails] = useState(false);
+  const [showCommissionDetails, setShowCommissionDetails] = useState(false);
   const isAdvanced = mode === "advanced";
 
   useEffect(() => {
@@ -525,15 +526,28 @@ export default function WbCalculatorPage() {
                   />
                   <Row label="Скидка WB/СПП" value={-r.platformDiscountAmount} />
                   <Row label="Себестоимость" value={-r.costPrice} />
-                  <Row label="Комиссия WB + эквайринг" value={-r.commission} />
-                  <SubRow
-                    label="Комиссия по тарифу"
-                    value={-r.commissionBreakdown.grossWbCommission}
+                  <ExpandableRow
+                    label="Комиссия WB + эквайринг"
+                    value={-r.commission}
+                    open={showCommissionDetails}
+                    onToggle={() => setShowCommissionDetails((v) => !v)}
                   />
-                  <SubRow
-                    label="Эквайринг"
-                    value={-r.commissionBreakdown.acquiringCost}
-                  />
+                  <Reveal show={showCommissionDetails}>
+                    <>
+                      {r.commissionBreakdown.grossWbCommission !== 0 && (
+                        <SubRow
+                          label="Комиссия по тарифу"
+                          value={-r.commissionBreakdown.grossWbCommission}
+                        />
+                      )}
+                      {r.commissionBreakdown.acquiringCost !== 0 && (
+                        <SubRow
+                          label="Эквайринг"
+                          value={-r.commissionBreakdown.acquiringCost}
+                        />
+                      )}
+                    </>
+                  </Reveal>
                   <ExpandableRow
                     label="Логистика WB"
                     value={-r.logistics}
@@ -703,8 +717,8 @@ function CustomSelect({
                 <button
                   key={o.value}
                   type="button"
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => {
+                  onMouseDown={(e) => {
+                    e.preventDefault();
                     onChange(o.value);
                     setOpen(false);
                   }}
@@ -722,14 +736,28 @@ function CustomSelect({
 }
 
 function AutocompleteSelect({ value, onChange, options, placeholder }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; placeholder: string; }) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
+  const [error, setError] = useState("");
+  const [activeIndex, setActiveIndex] = useState(0);
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ left: 0, top: 0, width: 0 });
   const ref = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const selected = options.find((o) => o.value === value);
-  const filtered = query.trim().length === 0 ? [] : options.filter((o) => o.label.toLowerCase().includes(query.toLowerCase())).slice(0, 25);
+  const minChars = 2;
+  const filtered =
+    query.trim().length < minChars
+      ? []
+      : options
+          .filter((o) => o.label.toLowerCase().includes(query.toLowerCase()))
+          .slice(0, 25);
 
-  useEffect(() => { setQuery(selected?.label ?? ''); }, [selected?.label]);
+  useEffect(() => {
+    setQuery(selected?.label ?? "");
+  }, [selected?.label]);
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [query]);
   useEffect(() => {
     if (!open || !ref.current) return;
     const update = () => {
@@ -747,7 +775,84 @@ function AutocompleteSelect({ value, onChange, options, placeholder }: { value: 
     };
   }, [open]);
 
-  return (<><div ref={ref}><input className={cls} value={query} placeholder={placeholder} onFocus={() => setOpen(true)} onChange={(e) => { setQuery(e.target.value); setOpen(true); }} /></div>{open && filtered.length > 0 && createPortal(<div style={{position:'fixed', left: pos.left, top: pos.top, width: pos.width, zIndex:1200}}><div className='rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/30 p-1 max-h-[320px] overflow-auto'>{filtered.map((o)=><button key={o.value} type='button' onMouseDown={(e)=>e.preventDefault()} onClick={()=>{onChange(o.value); setQuery(o.label); setOpen(false);}} className='w-full text-left px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-cyan-500/12 hover:text-white'>{o.label}</button>)}</div></div>, document.body)}</>);
+  const selectOption = (opt: { value: string; label: string }) => {
+    onChange(opt.value);
+    setQuery(opt.label);
+    setError("");
+    setOpen(false);
+  };
+
+  const validateOnBlur = () => {
+    const valid = options.some((o) => o.label === query);
+    if (!valid) {
+      setQuery(selected?.label ?? "");
+      setError("Категория не выбрана. Выберите вариант из списка.");
+    } else {
+      setError("");
+    }
+    setOpen(false);
+  };
+
+  return (
+    <>
+      <div ref={ref}>
+        <input
+          ref={inputRef}
+          className={`${cls} ${error ? "border-red-400/60" : ""}`}
+          value={query}
+          placeholder={placeholder}
+          onFocus={() => setOpen(true)}
+          onBlur={validateOnBlur}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setError("");
+            setOpen(true);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setOpen(false);
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              setActiveIndex((i) => Math.min(i + 1, Math.max(filtered.length - 1, 0)));
+            }
+            if (e.key === "ArrowUp") {
+              e.preventDefault();
+              setActiveIndex((i) => Math.max(i - 1, 0));
+            }
+            if (e.key === "Enter" && filtered[activeIndex]) {
+              e.preventDefault();
+              selectOption(filtered[activeIndex]);
+            }
+          }}
+        />
+      </div>
+      {error && <p className="mt-1 text-xs text-red-300">{error}</p>}
+      {open &&
+        createPortal(
+          <div style={{ position: "fixed", left: pos.left, top: pos.top, width: pos.width, zIndex: 1200 }}>
+            <div className="rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/30 p-1 max-h-[320px] overflow-auto">
+              {query.trim().length < minChars ? null : filtered.length === 0 ? (
+                <div className="px-3 py-2 text-sm text-white/55">Ничего не найдено. Попробуйте другое название.</div>
+              ) : (
+                filtered.map((o, i) => (
+                  <button
+                    key={o.value}
+                    type="button"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      selectOption(o);
+                    }}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-sm ${i === activeIndex ? "bg-cyan-500/20 text-cyan-100" : "text-white/80 hover:bg-cyan-500/12 hover:text-white"}`}
+                  >
+                    {o.label}
+                  </button>
+                ))
+              )}
+            </div>
+          </div>,
+          document.body,
+        )}
+    </>
+  );
 }
 
 function Field({
@@ -780,6 +885,18 @@ function Tip({ text }: { text: string }) {
     const top = r.bottom + 8;
     setXy({ left, top });
   }, [open]);
+  useEffect(() => {
+    const close = () => setOpen(false);
+    document.addEventListener("mousedown", close);
+    window.addEventListener("scroll", close, true);
+    window.addEventListener("resize", close);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      window.removeEventListener("scroll", close, true);
+      window.removeEventListener("resize", close);
+      setOpen(false);
+    };
+  }, []);
   return (
     <>
       <button
@@ -787,6 +904,7 @@ function Tip({ text }: { text: string }) {
         type="button"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
+        onBlur={() => setOpen(false)}
         onClick={() => setOpen((v) => !v)}
         className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-white/20 text-[10px] text-white/50 cursor-pointer hover:border-cyan-400/40 hover:text-cyan-200 transition-colors"
       >
