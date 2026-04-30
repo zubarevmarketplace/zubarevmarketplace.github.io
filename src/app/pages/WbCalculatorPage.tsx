@@ -59,7 +59,7 @@ export default function WbCalculatorPage() {
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         <div className="xl:col-span-6 p-5 md:p-6 bg-white/[0.03] border border-white/10 rounded-3xl space-y-3">
-          {!isAdvanced && <Field label="Категория товара"><CustomSelect value={input.categoryId} onChange={(v) => setInput((p) => ({ ...p, categoryId: v }))} options={categories.map(c => ({ value: c.id, label: c.label }))} /></Field>}
+          {!isAdvanced && <Field label="Категория товара" tip="Комиссия WB от цены продажи. В простом режиме берётся среднее значение по категории."><CustomSelect value={input.categoryId} onChange={(v) => setInput((p) => ({ ...p, categoryId: v }))} options={categories.map(c => ({ value: c.id, label: c.label }))} /></Field>}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Field label="Цена продажи на WB" tip={tips.sale}><NumberInput value={input.salePrice} onChange={(v) => setInput((p) => ({ ...p, salePrice: v }))} min={1} max={1_000_000} /></Field>
             <Field label="Себестоимость товара" tip={tips.cost}><NumberInput value={input.costPrice} onChange={(v) => setInput((p) => ({ ...p, costPrice: v }))} min={0} max={1_000_000} /></Field>
@@ -84,17 +84,17 @@ export default function WbCalculatorPage() {
           </>}
 
           <Reveal show={isAdvanced}><div className="pt-3 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Field label="Комиссия WB, %"><NumberInput value={input.manualKvv} onChange={(v) => setInput((p) => ({ ...p, manualKvv: v }))} min={0} max={100} /></Field>
-            <Field label="ДРР, %"><NumberInput value={input.adRate * 100} onChange={(v) => setInput((p) => ({ ...p, adRate: v / 100 }))} min={0} max={100} /></Field>
-            <Field label="Доля выкупа, %"><NumberInput value={input.manualBuyoutRate} onChange={(v) => setInput((p) => ({ ...p, manualBuyoutRate: v }))} min={0} max={100} /></Field>
-            <Field label="Локализация продаж, %"><NumberInput value={input.manualLocalOrderShare} onChange={(v) => setInput((p) => ({ ...p, manualLocalOrderShare: v }))} min={0} max={100} /></Field>
-            <Field label="Срок хранения, дней"><NumberInput value={input.manualStorageDays} onChange={(v) => setInput((p) => ({ ...p, manualStorageDays: v }))} min={0} max={365} /></Field>
+            <Field label="Комиссия WB, %" tip="Комиссия Wildberries от цены продажи. В простом режиме берётся среднее значение по категории, в расширенном режиме вы можете указать её вручную."><NumberInput value={input.manualKvv} onChange={(v) => setInput((p) => ({ ...p, manualKvv: v }))} min={0} max={100} /></Field>
+            <Field label="ДРР, %" tip="Доля рекламных расходов от цены продажи. Для активного запуска часто закладывают 20%, для поддержания продаж — 10%."><NumberInput value={input.adRate * 100} onChange={(v) => setInput((p) => ({ ...p, adRate: v / 100 }))} min={0} max={100} /></Field>
+            <Field label="Доля выкупа, %" tip="Для одежды, обуви и размерных товаров часто ставят 30–50%. Для обычной товарки — 80–95%."><NumberInput value={input.manualBuyoutRate} onChange={(v) => setInput((p) => ({ ...p, manualBuyoutRate: v }))} min={0} max={100} /></Field>
+            <Field label="Локализация продаж, %" tip="Рекомендую ставить 50%, если вы сомневаетесь, что выбрать. У большинства продавцов локализация ниже 100%, особенно если товар распределён по складам неравномерно."><NumberInput value={input.manualLocalOrderShare} onChange={(v) => setInput((p) => ({ ...p, manualLocalOrderShare: v }))} min={0} max={100} /></Field>
+            <Field label="Срок хранения, дней" tip="Если партия продаётся дольше, хранение увеличит расходы."><NumberInput value={input.manualStorageDays} onChange={(v) => setInput((p) => ({ ...p, manualStorageDays: v }))} min={0} max={365} /></Field>
             <Field label="Налоговый режим"><CustomSelect value={input.taxMode} onChange={(v) => setInput((p) => ({ ...p, taxMode: v as TaxMode }))} options={[{ value: 'usn6', label: 'УСН Доходы' }, { value: 'usn15', label: 'УСН Доходы-расходы' }]} /></Field>
             <Field label="Налоговая ставка, %"><NumberInput value={input.taxRate} onChange={(v) => setInput((p) => ({ ...p, taxRate: v }))} min={0} max={100} /></Field>
-            <Field label="Доставка до WB, ₽/ед."><NumberInput value={input.manualDeliveryToWbPerUnit} onChange={(v) => setInput((p) => ({ ...p, manualDeliveryToWbPerUnit: v }))} min={0} max={100000} /></Field>
-            <Field label="Фулфилмент, ₽"><NumberInput value={input.manualFulfillmentCost} onChange={(v) => setInput((p) => ({ ...p, manualFulfillmentCost: v }))} min={0} max={100000} /></Field>
-            <Field label="Упаковка, ₽"><NumberInput value={input.packagingCost} onChange={(v) => setInput((p) => ({ ...p, packagingCost: v }))} min={0} max={100000} /></Field>
-            <Field label="Прочие расходы, ₽"><NumberInput value={input.otherCosts} onChange={(v) => setInput((p) => ({ ...p, otherCosts: v }))} min={0} max={100000} /></Field>
+            <Field label="Доставка до WB, ₽/ед." tip="Калькулятор рассчитывает доставку до WB через вместимость паллеты по габаритам товара и среднюю стоимость доставки по выбранной географии."><NumberInput value={input.manualDeliveryToWbPerUnit} onChange={(v) => setInput((p) => ({ ...p, manualDeliveryToWbPerUnit: v }))} min={0} max={100000} /></Field>
+            <Field label="Фулфилмент, ₽" tip="Добавьте расход на подготовку товара, если пользуетесь сторонним фулфилментом. Не включайте повторно, если этот расход уже заложен в себестоимость."><NumberInput value={input.manualFulfillmentCost} onChange={(v) => setInput((p) => ({ ...p, manualFulfillmentCost: v }))} min={0} max={100000} /></Field>
+            <Field label="Упаковка, ₽" tip="Дополнительные расходы на упаковку одной единицы товара, если они не включены в себестоимость."><NumberInput value={input.packagingCost} onChange={(v) => setInput((p) => ({ ...p, packagingCost: v }))} min={0} max={100000} /></Field>
+            <Field label="Прочие расходы, ₽" tip="Любые дополнительные расходы на единицу товара, которые не учтены в других полях."><NumberInput value={input.otherCosts} onChange={(v) => setInput((p) => ({ ...p, otherCosts: v }))} min={0} max={100000} /></Field>
           </div></Reveal>
         </div>
 
@@ -117,11 +117,33 @@ function NumberInput({ value, onChange, min, max, step = 1 }: { value: number; o
 }
 
 function CustomSelect({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[] }) {
-  return <div className="relative"><select value={value} onChange={(e) => onChange(e.target.value)} className={cls + ' pr-9'}>{options.map((o) => <option key={o.value} value={o.value} className="bg-[#111922] text-white">{o.label}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/45 pointer-events-none">▾</span></div>;
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const selected = options.find((o) => o.value === value);
+  useEffect(() => {
+    const onDoc = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener('mousedown', onDoc);
+    return () => document.removeEventListener('mousedown', onDoc);
+  }, []);
+  return <div ref={ref} className="relative">
+    <button type="button" onClick={() => setOpen((v) => !v)} className={cls + ' text-left pr-9'}>
+      {selected?.label ?? 'Выберите'}
+      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/45">▾</span>
+    </button>
+    <div className={`absolute z-30 mt-2 left-0 right-0 origin-top transition-all duration-200 ${open ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
+      <div className="rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/20 p-1">
+        {options.map((o) => (
+          <button key={o.value} type="button" onClick={() => { onChange(o.value); setOpen(false); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${o.value === value ? 'bg-cyan-500/20 text-cyan-200' : 'text-white/80 hover:bg-cyan-500/12 hover:text-white'}`}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>;
 }
 
 function Field({ label, tip, children }: { label: string; tip?: string; children: React.ReactNode }) { return <label className="block space-y-1"><span className="text-xs text-white/65 flex items-center gap-2">{label}{tip && <Tip text={tip} />}</span>{children}</label>; }
-function Tip({ text }: { text: string }) { return <span className="group relative inline-flex items-center justify-center w-4 h-4 rounded-full border border-white/20 text-[10px] text-white/50 cursor-help">i<span className="absolute hidden group-hover:block group-active:block z-20 w-64 p-2 rounded-lg bg-[#0F1820] border border-white/15 text-white/75 text-[11px] leading-snug left-1/2 -translate-x-1/2 top-5">{text}</span></span>; }
+function Tip({ text }: { text: string }) { return <span className="group relative inline-flex items-center justify-center w-4 h-4 rounded-full border border-white/20 text-[10px] text-white/50 cursor-pointer">i<span className="absolute hidden group-hover:block group-active:block z-20 w-64 p-2 rounded-lg bg-[#0F1820] border border-white/15 text-white/75 text-[11px] leading-snug left-1/2 -translate-x-1/2 top-5">{text}</span></span>; }
 function CompactToggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) { return <button type='button' onClick={() => onChange(!checked)} className='w-full py-1.5 flex items-center justify-between text-sm'><span className='text-white/80'>{label}</span><span className={`w-10 h-6 rounded-full p-1 transition-all ${checked ? 'bg-cyan-500/40' : 'bg-white/15'}`}><span className={`block w-4 h-4 rounded-full bg-white transition-transform ${checked ? 'translate-x-4' : ''}`} /></span></button>; }
 function Segmented({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: [string, string][] }) { const i = Math.max(0, options.findIndex((o) => o[0] === value)); return <div className='relative inline-grid grid-cols-2 p-1 rounded-xl border border-white/10 bg-white/[0.03]'><div className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-cyan-500/20 border border-cyan-400/30 transition-transform duration-300 ${i === 1 ? 'translate-x-full' : ''}`} />{options.map(([k, l]) => <button key={k} onClick={() => onChange(k)} className={`relative z-10 px-4 py-2 text-sm ${value === k ? 'text-cyan-200' : 'text-white/65'}`}>{l}</button>)}</div>; }
 function Reveal({ show, children }: { show: boolean; children: React.ReactNode }) { return <div className={`grid transition-all duration-300 ${show ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}><div className='overflow-hidden'>{children}</div></div>; }
