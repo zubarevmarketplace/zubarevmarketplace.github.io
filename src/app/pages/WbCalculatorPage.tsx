@@ -959,14 +959,16 @@ function CompactToggle({
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className="w-full py-1.5 flex items-center justify-between text-sm"
+      className="w-full py-1.5 flex items-center justify-between text-sm group"
     >
-      <span className="text-white/80">{label}</span>
+      <span className="text-white/80 transition-colors group-hover:text-cyan-100">
+        {label}
+      </span>
       <span
-        className={`w-10 h-6 rounded-full p-1 transition-all ${checked ? "bg-cyan-500/40" : "bg-white/15"}`}
+        className={`w-10 h-6 rounded-full p-1 transition-all duration-200 group-hover:shadow-[0_0_0_1px_rgba(34,211,238,0.18),0_6px_14px_rgba(6,182,212,0.14)] ${checked ? "bg-cyan-500/40 group-hover:bg-cyan-500/55" : "bg-white/15 group-hover:bg-white/25"}`}
       >
         <span
-          className={`block w-4 h-4 rounded-full bg-white transition-transform ${checked ? "translate-x-4" : ""}`}
+          className={`block w-4 h-4 rounded-full bg-white transition-transform duration-200 ${checked ? "translate-x-4" : ""}`}
         />
       </span>
     </button>
