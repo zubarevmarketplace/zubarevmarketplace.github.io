@@ -25,7 +25,7 @@ export const geoPresets: Record<'allRussia' | 'cfo' | 'moscow', GeoPreset> = {
     ],
   },
   cfo: {
-    label: 'ЦФО',
+    label: 'Центральная Россия',
     localOrderShare: 0.5,
     deliveryPalletCost: 3000,
     warehouseWeights: [
@@ -34,7 +34,7 @@ export const geoPresets: Record<'allRussia' | 'cfo' | 'moscow', GeoPreset> = {
     ],
   },
   moscow: {
-    label: 'Москва / Подмосковье',
+    label: 'Только Москва',
     localOrderShare: 0.3,
     deliveryPalletCost: 3000,
     warehouseWeights: [{ group: 'kolPodolskMin', weight: 1 }],
