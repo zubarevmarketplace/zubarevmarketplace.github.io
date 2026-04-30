@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { categories } from "../config/categories";
+import rawCommissionTariffs from "../../calculator/data/commissionTariffs.json";
 import { geoPresets } from "../config/geoPresets";
 import {
   calculateUnitEconomics,
@@ -16,6 +17,7 @@ import type {
 
 const initial: CalculatorInput = {
   categoryId: "home",
+  commissionTariffId: "",
   salePrice: 2500,
   costPrice: 900,
   lengthCm: 30,
@@ -31,8 +33,6 @@ const initial: CalculatorInput = {
   taxRate: 6,
   includeFulfillment: false,
   includeDeliveryToWb: false,
-  manualFboCommissionRate: 18,
-  manualFbsCommissionRate: 21.5,
   manualBuyoutRate: 90,
   manualLocalOrderShare: 100,
   manualStorageDays: 30,
@@ -66,6 +66,12 @@ export default function WbCalculatorPage() {
   const [input, setInput] = useState<CalculatorInput>(initial);
   const [flash, setFlash] = useState(false);
   const isAdvanced = mode === "advanced";
+
+  useEffect(() => {
+    if (input.commissionTariffId) return;
+    const first = (rawCommissionTariffs as Array<{ id: string }>)[0];
+    if (first) setInput((p) => ({ ...p, commissionTariffId: first.id }));
+  }, [input.commissionTariffId]);
 
   useEffect(() => {
     if (!input.includeTaxes) return;
@@ -321,16 +327,16 @@ export default function WbCalculatorPage() {
             <Reveal show={isAdvanced}>
               <div className="pt-3 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field
-                  label="Комиссия WB, %"
-                  tip="Комиссия Wildberries от цены продажи. В простом режиме берётся среднее значение по категории, в расширенном режиме вы можете указать её вручную."
+                  label="Категория / предмет WB"
+                  tip="В расширенном режиме комиссия FBO/FBS подтягивается автоматически из справочника тарифов WB."
                 >
-                  <NumberInput
-                    value={input.manualFboCommissionRate}
-                    onChange={(v) =>
-                      setInput((p) => ({ ...p, manualFboCommissionRate: v }))
-                    }
-                    min={0}
-                    max={100}
+                  <CustomSelect
+                    value={input.commissionTariffId}
+                    onChange={(v) => setInput((p) => ({ ...p, commissionTariffId: v }))}
+                    options={(rawCommissionTariffs as Array<{ id: string; category: string; subject: string }>).map((t) => ({
+                      value: t.id,
+                      label: `${t.category} → ${t.subject}`,
+                    }))}
                   />
                 </Field>
                 <Field
