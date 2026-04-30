@@ -18,11 +18,13 @@ export default function Header({ currentPage }: HeaderProps) {
   return (
     <>
       <nav className="relative z-50 px-4 md:px-8 py-6 flex items-center justify-between max-w-[1400px] mx-auto border-b border-white/5 lg:px-10">
-        <a href="/" className="text-xl tracking-tight">NZ</a>
+        <a href="/" className="flex items-center" aria-label="На главную">
+          <img src="/favicon.svg" alt="Zubarev Lab" className="w-9 h-9" />
+        </a>
 
-        <div className="hidden md:flex items-center gap-8 lg:gap-10 ml-auto pl-10">
+        <div className="hidden md:flex items-center gap-10 lg:gap-12 xl:gap-14 ml-auto pl-14 lg:pl-20">
           {landingLinks.map((link) => (
-            <a key={link.label} href={link.href} className="text-sm text-white/60 hover:text-white/90 transition-colors">
+            <a key={link.label} href={link.href} className="text-sm text-white/60 hover:text-white/90 transition-colors whitespace-nowrap">
               {link.label}
             </a>
           ))}
