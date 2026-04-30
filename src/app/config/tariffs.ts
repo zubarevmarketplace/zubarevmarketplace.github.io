@@ -1,11 +1,11 @@
-export const warehouseCoefficients = {
-  koledino: 2.05,
-  podolsk: 1.95,
-  tula: 1.6,
-  kazan: 1.4,
-  krasnodar: 1.7,
-  nevinnomyssk: 1.5,
-  ekaterinburg: 1.8,
+export const warehouseTariffs = {
+  koledino: { logistics: 1.95, storage: 1.45, fbs: 1.95 },
+  podolsk: { logistics: 2.0, storage: 1.7, fbs: 1.95 },
+  tula: { logistics: 1.5, storage: 1.1, fbs: 1.5 },
+  kazan: { logistics: 2.2, storage: 1.8, fbs: null },
+  krasnodar: { logistics: 1.6, storage: 1.45, fbs: 1.6 },
+  nevinnomyssk: { logistics: 1.3, storage: 1.35, fbs: 1.3 },
+  ekaterinburg: { logistics: 2.2, storage: 1.85, fbs: 2.2 },
 } as const;
 
 export const palletConfig = {
@@ -15,8 +15,9 @@ export const palletConfig = {
 };
 
 export const defaults = {
-  adRate: 0.1,
-  fulfillmentCost: 20,
+  simplePlatformDiscountRate: 30,
   fbsProcessingCost: 20,
+  fulfillmentCost: 20,
   storageDays: 30,
+  acquiringRatePercent: 1.5,
 };

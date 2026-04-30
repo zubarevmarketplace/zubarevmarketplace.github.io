@@ -8,7 +8,7 @@ import type { CalculatorInput, CalculatorMode, ResultMode, TaxMode } from '../ty
 
 const initial: CalculatorInput = {
   categoryId: 'home', salePrice: 2500, costPrice: 900, lengthCm: 30, widthCm: 20, heightCm: 10,
-  geoPresetId: 'allRussia', includeAds: true, adRate: 0.1, includeTaxes: true, taxMode: 'usn6', taxRate: 6,
+  geoPresetId: 'allRussia', platformDiscountRatePercent: 30, weightKg: 0, includeAds: true, adRate: 10, includeTaxes: true, taxMode: 'usn6', taxRate: 6,
   includeFulfillment: false, includeDeliveryToWb: false, manualFboCommissionRate: 18, manualFbsCommissionRate: 21.5, manualBuyoutRate: 90, manualLocalOrderShare: 100,
   manualStorageDays: 30, manualDeliveryToWbPerUnit: 0, packagingCost: 0, manualFulfillmentCost: 20, otherCosts: 0,
 };
@@ -78,7 +78,7 @@ export default function WbCalculatorPage() {
 
           {!isAdvanced && <>
             <CompactToggle label="Учитывать рекламу" checked={input.includeAds} onChange={(v) => setInput((p) => ({ ...p, includeAds: v }))} />
-            <Reveal show={input.includeAds}><Field label="Рекламный сценарий" tip={tips.ads}><CustomSelect value={String(input.adRate)} onChange={(v) => setInput((p) => ({ ...p, adRate: Number(v) }))} options={[{ value: '0', label: 'Нет рекламы — 0%' }, { value: '0.1', label: 'Поддержание продаж — 10%' }, { value: '0.2', label: 'Активный запуск — 20%' }]} /></Field></Reveal>
+            <Reveal show={input.includeAds}><Field label="Рекламный сценарий" tip={tips.ads}><CustomSelect value={String(input.adRate)} onChange={(v) => setInput((p) => ({ ...p, adRate: Number(v) }))} options={[{ value: '0', label: 'Нет рекламы — 0%' }, { value: '10', label: 'Поддержание продаж — 10%' }, { value: '20', label: 'Активный запуск — 20%' }]} /></Field></Reveal>
             <CompactToggle label="Учитывать налоги" checked={input.includeTaxes} onChange={(v) => setInput((p) => ({ ...p, includeTaxes: v }))} />
             <Reveal show={input.includeTaxes}><Field label="Налоговый режим" tip={tips.taxMode}><CustomSelect value={input.taxMode} onChange={(v) => setInput((p) => ({ ...p, taxMode: v as TaxMode }))} options={[{ value: 'usn6', label: 'УСН Доходы' }, { value: 'usn15', label: 'УСН Доходы-расходы' }]} /></Field><Field label="Налоговая ставка, %" tip={tips.taxRate}><NumberInput value={input.taxRate} onChange={(v) => setInput((p) => ({ ...p, taxRate: v }))} min={0} max={100} /></Field></Reveal>
             <CompactToggle label="Работаю через фулфилмент" checked={input.includeFulfillment} onChange={(v) => setInput((p) => ({ ...p, includeFulfillment: v }))} />
@@ -116,7 +116,7 @@ function NumberInput({ value, onChange, min, max, step = 1 }: { value: number; o
   const [text, setText] = useState(String(value));
   useEffect(() => setText(String(value)), [value]);
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
-  return <input type="number" value={text} min={min} max={max} step={step} onWheel={(e) => (e.currentTarget as HTMLInputElement).blur()} onFocus={(e) => e.currentTarget.select()} onChange={(e) => setText(e.target.value)} onBlur={() => { const n = Number(text); const v = Number.isFinite(n) ? clamp(n) : min; onChange(v); setText(String(v)); }} className={cls} />;
+  return <input type="text" inputMode="decimal" value={text} min={min} max={max} step={step} onWheel={(e) => (e.currentTarget as HTMLInputElement).blur()} onFocus={(e) => e.currentTarget.select()} onChange={(e) => setText(e.target.value)} onBlur={() => { const n = Number(text); const v = Number.isFinite(n) ? clamp(n) : min; onChange(v); setText(String(v)); }} className={cls} />;
 }
 
 function CustomSelect({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[] }) {

@@ -1,6 +1,6 @@
 import { categories } from '../config/categories';
 import { geoPresets } from '../config/geoPresets';
-import { defaults, palletConfig, warehouseCoefficients } from '../config/tariffs';
+import { defaults, palletConfig, warehouseTariffs } from '../config/tariffs';
 import type { CalculationContext, CalculatorInput, CommissionBreakdown, LogisticsBreakdown, ResultMode, TaxMode, UnitEconomicsResult } from '../types/calculator';
 
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, Number.isFinite(v) ? v : min));
@@ -8,11 +8,11 @@ const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(mi
 export const calculateVolumeLiters = (lengthCm: number, widthCm: number, heightCm: number) => (lengthCm * widthCm * heightCm) / 1000;
 
 export function calculateBaseLogistics(volumeLiters: number) {
-  if (volumeLiters > 0 && volumeLiters <= 0.2) return 23;
-  if (volumeLiters <= 0.4) return 26;
-  if (volumeLiters <= 0.6) return 29;
-  if (volumeLiters <= 0.8) return 30;
-  if (volumeLiters <= 1) return 32;
+  if (volumeLiters > 0 && volumeLiters <= 0.2) return volumeLiters * 23;
+  if (volumeLiters <= 0.4) return volumeLiters * 26;
+  if (volumeLiters <= 0.6) return volumeLiters * 29;
+  if (volumeLiters <= 0.8) return volumeLiters * 30;
+  if (volumeLiters <= 1) return volumeLiters * 32;
   return 46 + (volumeLiters - 1) * 14;
 }
 
@@ -36,16 +36,18 @@ export function getCalculationContext(input: CalculatorInput, isAdvanced: boolea
   const baseLogistics = calculateBaseLogistics(volumeLiters);
   const itemsPerPallet = calculatePalletCapacity(length, width, height);
   const preset = geoPresets[input.geoPresetId];
-  const groupCoefficients = { kolPodolskMin: Math.min(warehouseCoefficients.koledino, warehouseCoefficients.podolsk), krasnodarNevinnomysskMin: Math.min(warehouseCoefficients.krasnodar, warehouseCoefficients.nevinnomyssk) };
-  const geoWarehouseCoefficient = preset.warehouseWeights.reduce((sum, item) => sum + item.weight * (item.group ? groupCoefficients[item.group] : item.warehouse ? warehouseCoefficients[item.warehouse] : 0), 0);
+  const groupLogistics = { kolPodolskMin: Math.min(warehouseTariffs.koledino.logistics, warehouseTariffs.podolsk.logistics), krasnodarNevinnomysskMin: Math.min(warehouseTariffs.krasnodar.logistics, warehouseTariffs.nevinnomyssk.logistics) };
+  const groupStorage = { kolPodolskMin: Math.min(warehouseTariffs.koledino.storage, warehouseTariffs.podolsk.storage), krasnodarNevinnomysskMin: Math.min(warehouseTariffs.krasnodar.storage, warehouseTariffs.nevinnomyssk.storage) };
+  const geoWarehouseCoefficient = preset.warehouseWeights.reduce((sum, item) => sum + item.weight * (item.group ? groupLogistics[item.group] : item.warehouse ? warehouseTariffs[item.warehouse].logistics : 0), 0);
+  const geoStorageCoefficient = preset.warehouseWeights.reduce((sum, item) => sum + item.weight * (item.group ? groupStorage[item.group] : item.warehouse ? warehouseTariffs[item.warehouse].storage : 0), 0);
   const deliveryToWbPerUnit = isAdvanced ? clamp(input.manualDeliveryToWbPerUnit, 0, 100000) : input.includeDeliveryToWb ? preset.deliveryPalletCost / itemsPerPallet : 0;
-  return { volumeLiters: Number(volumeLiters.toFixed(2)), baseLogistics: Number(baseLogistics.toFixed(2)), itemsPerPallet, geoWarehouseCoefficient: Number(geoWarehouseCoefficient.toFixed(2)), deliveryToWbPerUnit: Number(deliveryToWbPerUnit.toFixed(2)) };
+  return { volumeLiters: Number(volumeLiters.toFixed(2)), baseLogistics: Number(baseLogistics.toFixed(2)), itemsPerPallet, geoWarehouseCoefficient: Number(geoWarehouseCoefficient.toFixed(2)), geoStorageCoefficient: Number(geoStorageCoefficient.toFixed(2)), deliveryToWbPerUnit: Number(deliveryToWbPerUnit.toFixed(2)) } as any;
 }
 
 function calculateCommissionAndAcquiring(buyerPrice: number, priceBeforeWbDiscount: number, platformDiscountAmount: number, commissionRatePercent: number): { total: number; breakdown: CommissionBreakdown } {
   const grossWbCommission = priceBeforeWbDiscount * (commissionRatePercent / 100);
   const netWbCommission = grossWbCommission - platformDiscountAmount;
-  const acquiringCost = buyerPrice * 0.015;
+  const acquiringCost = buyerPrice * (defaults.acquiringRatePercent / 100);
   return { total: netWbCommission + acquiringCost, breakdown: { grossWbCommission, platformDiscountAmount, netWbCommission, acquiringCost } };
 }
 
@@ -81,7 +83,7 @@ export function calculateUnitEconomics(input: CalculatorInput, model: ResultMode
   const commissionData = calculateCommissionAndAcquiring(buyerPrice, priceBeforeWbDiscount, platformDiscountAmount, commissionRatePercent);
   const commission = commissionData.total;
 
-  const localizationIndexMultiplier = isAdvanced ? clamp(input.manualLocalOrderShare, 0, 100) / 100 : 1;
+  const localizationIndexMultiplier = 1;
   const salesDistributionIndexRate = 0;
 
   const forwardLogisticsBase = context.baseLogistics;
@@ -93,7 +95,7 @@ export function calculateUnitEconomics(input: CalculatorInput, model: ResultMode
   const rev = calculateReverseLogistics(context.volumeLiters, buyoutRatePercent);
   const logistics = forwardLogistics + rev.reverseLogisticsPerSoldUnit;
 
-  const storage = model === 'fbo' ? context.volumeLiters * 0.08 * context.geoWarehouseCoefficient * clamp(isAdvanced ? input.manualStorageDays : defaults.storageDays, 0, 365) : 0;
+  const storage = model === 'fbo' ? context.volumeLiters * 0.08 * (context as any).geoStorageCoefficient * clamp(isAdvanced ? input.manualStorageDays : defaults.storageDays, 0, 365) : 0;
   const processing = model === 'fbs' ? defaults.fbsProcessingCost : 0;
   const adCost = priceBeforeWbDiscount * (drrPercent / 100);
   const fulfillment = isAdvanced ? clamp(input.manualFulfillmentCost, 0, 100000) : (input.includeFulfillment ? clamp(defaults.fulfillmentCost, 0, 100000) : 0);

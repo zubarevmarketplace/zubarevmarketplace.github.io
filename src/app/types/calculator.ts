@@ -49,4 +49,4 @@ export interface CommissionBreakdown {
 }
 
 export interface UnitEconomicsResult { model: ResultMode; salePrice: number; priceBeforeWbDiscount: number; platformDiscountAmount: number; costPrice: number; commission: number; logistics: number; storage: number; processing: number; adCost: number; tax: number; fulfillment: number; deliveryToWb: number; packaging: number; otherCosts: number; profitBeforeTax: number; profit: number; margin: number; roi: number | null; breakEvenPrice: number; totalExpenses: number; isSgt: boolean; commissionBreakdown: CommissionBreakdown; logisticsBreakdown: LogisticsBreakdown; }
-export interface CalculationContext { volumeLiters: number; baseLogistics: number; itemsPerPallet: number; geoWarehouseCoefficient: number; deliveryToWbPerUnit: number; }
+export interface CalculationContext { volumeLiters: number; baseLogistics: number; itemsPerPallet: number; geoWarehouseCoefficient: number; geoStorageCoefficient: number; deliveryToWbPerUnit: number; }
