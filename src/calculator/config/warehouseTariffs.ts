@@ -1,4 +1,16 @@
 export const warehouseTariffs = {
+  "podolsk": {
+    "label": "Подольск",
+    "logistics": 2,
+    "storage": 1.7,
+    "fbs": 1.95
+  },
+  "kazan": {
+    "label": "Казань: Питание",
+    "logistics": 2.2,
+    "storage": 1.8,
+    "fbs": null
+  },
   "nevinnomyssk": {
     "label": "Невинномысск",
     "logistics": 1.3,
@@ -12,10 +24,10 @@ export const warehouseTariffs = {
     "fbs": 1.5
   },
   "krasnodar": {
-    "label": "Краснодар",
+    "label": "Краснодар (Тихорецкая): Питание",
     "logistics": 1.6,
     "storage": 1.45,
-    "fbs": 1.6
+    "fbs": null
   },
   "koledino": {
     "label": "Коледино",
@@ -23,16 +35,10 @@ export const warehouseTariffs = {
     "storage": 1.45,
     "fbs": 1.95
   },
-  "podolsk": {
-    "label": "Подольск",
-    "logistics": 2,
-    "storage": 1.7,
-    "fbs": 1.95
-  },
-  "kazan": {
-    "label": "Казань",
-    "logistics": 2.2,
-    "storage": 1.8,
+  "ekaterinburg": {
+    "label": "Екатеринбург (Перспективная): Питание",
+    "logistics": 2.25,
+    "storage": 2.25,
     "fbs": null
   }
 } as const;

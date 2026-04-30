@@ -86,7 +86,20 @@ const aliases: Record<string, string> = {
 for (const r of rows) {
   const label = String(r["Склад"] ?? r["Название"] ?? "").trim();
   if (!label) continue;
-  const key = aliases[label.toLowerCase()];
+  function getWarehouseKey(label: string) {
+    const s = label.toLowerCase();
+
+    if (s.includes("коледино")) return "koledino";
+    if (s.includes("подольск")) return "podolsk";
+    if (s.includes("тула")) return "tula";
+    if (s.includes("казань")) return "kazan";
+    if (s.includes("краснодар")) return "krasnodar";
+    if (s.includes("невинномысск")) return "nevinnomyssk";
+    if (s.includes("екатеринбург")) return "ekaterinburg";
+
+    return null;
+  }
+  const key = getWarehouseKey(label);
   if (!key) continue;
   const logistics = normalizePercent(
     num(r["Логистика"] ?? r["Коэффициент логистики, %"]),
