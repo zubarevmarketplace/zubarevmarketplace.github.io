@@ -68,6 +68,18 @@ export default function WbCalculatorPage() {
   const [showLogisticsDetails, setShowLogisticsDetails] = useState(false);
   const [showCommissionDetails, setShowCommissionDetails] = useState(false);
   const isAdvanced = mode === "advanced";
+  const commissionOptions = useMemo(
+    () =>
+      (rawCommissionTariffs as Array<{
+        id: string;
+        category: string;
+        subject: string;
+      }>).map((t) => ({
+        value: t.id,
+        label: `${t.subject} — ${t.category}`,
+      })),
+    [],
+  );
 
   useEffect(() => {
     if (input.commissionTariffId) return;
@@ -100,14 +112,15 @@ export default function WbCalculatorPage() {
     () => getCalculationContext(input, isAdvanced),
     [input, isAdvanced],
   );
-  const results = useMemo(
-    () => ({
-      fbo: calculateUnitEconomics(input, "fbo", isAdvanced),
-      fbs: calculateUnitEconomics(input, "fbs", isAdvanced),
-    }),
+  const fboResult = useMemo(
+    () => calculateUnitEconomics(input, "fbo", isAdvanced),
     [input, isAdvanced],
   );
-  const r = results[resultMode];
+  const fbsResult = useMemo(
+    () => calculateUnitEconomics(input, "fbs", isAdvanced),
+    [input, isAdvanced],
+  );
+  const r = resultMode === "fbo" ? fboResult : fbsResult;
   const totalExpenses =
     r.costPrice +
     r.commission +
@@ -335,10 +348,7 @@ export default function WbCalculatorPage() {
                   <AutocompleteSelect
                     value={input.commissionTariffId}
                     onChange={(v) => setInput((p) => ({ ...p, commissionTariffId: v }))}
-                    options={(rawCommissionTariffs as Array<{ id: string; category: string; subject: string }>).map((t) => ({
-                      value: t.id,
-                      label: `${t.subject} — ${t.category}`,
-                    }))}
+                    options={commissionOptions}
                     placeholder="Начните вводить название предмета WB"
                   />
                 </Field>
@@ -737,6 +747,7 @@ function CustomSelect({
 
 function AutocompleteSelect({ value, onChange, options, placeholder }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; placeholder: string; }) {
   const [query, setQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [error, setError] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const [open, setOpen] = useState(false);
@@ -745,19 +756,26 @@ function AutocompleteSelect({ value, onChange, options, placeholder }: { value: 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const selected = options.find((o) => o.value === value);
   const minChars = 2;
-  const filtered =
-    query.trim().length < minChars
-      ? []
-      : options
-          .filter((o) => o.label.toLowerCase().includes(query.toLowerCase()))
-          .slice(0, 25);
+  const filtered = useMemo(() => {
+    const normalized = debouncedSearch.trim().toLowerCase();
+    if (normalized.length < minChars) return [];
+    return options
+      .filter((o) => o.label.toLowerCase().includes(normalized))
+      .slice(0, 25);
+  }, [debouncedSearch, options]);
 
   useEffect(() => {
     setQuery(selected?.label ?? "");
   }, [selected?.label]);
   useEffect(() => {
-    setActiveIndex(0);
+    const timer = window.setTimeout(() => {
+      setDebouncedSearch(query);
+    }, 200);
+    return () => window.clearTimeout(timer);
   }, [query]);
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [debouncedSearch]);
   useEffect(() => {
     if (!open || !ref.current) return;
     const update = () => {
@@ -830,7 +848,7 @@ function AutocompleteSelect({ value, onChange, options, placeholder }: { value: 
         createPortal(
           <div style={{ position: "fixed", left: pos.left, top: pos.top, width: pos.width, zIndex: 1200 }}>
             <div className="rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/30 p-1 max-h-[320px] overflow-auto">
-              {query.trim().length < minChars ? null : filtered.length === 0 ? (
+              {debouncedSearch.trim().length < minChars ? null : filtered.length === 0 ? (
                 <div className="px-3 py-2 text-sm text-white/55">Ничего не найдено. Попробуйте другое название.</div>
               ) : (
                 filtered.map((o, i) => (
