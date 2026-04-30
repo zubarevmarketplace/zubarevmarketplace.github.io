@@ -10,4 +10,6 @@ export const defaults = {
   fulfillmentCost: 20,
   storageDays: 30,
   acquiringRatePercent: 1.5,
+  maxLocalizationLogisticsMarkup: 0.3,
+  maxSalesDistributionIndexRate: 0.01,
 };

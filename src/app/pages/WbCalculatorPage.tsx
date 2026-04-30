@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { categories } from "../config/categories";
+import rawCommissionTariffs from "../../calculator/data/commissionTariffs.json";
 import { geoPresets } from "../config/geoPresets";
 import {
   calculateUnitEconomics,
@@ -16,6 +17,7 @@ import type {
 
 const initial: CalculatorInput = {
   categoryId: "home",
+  commissionTariffId: "",
   salePrice: 2500,
   costPrice: 900,
   lengthCm: 30,
@@ -23,7 +25,7 @@ const initial: CalculatorInput = {
   heightCm: 10,
   geoPresetId: "allRussia",
   platformDiscountRatePercent: 30,
-  weightKg: 0,
+  weightKg: 1,
   includeAds: true,
   adRate: 10,
   includeTaxes: true,
@@ -31,10 +33,8 @@ const initial: CalculatorInput = {
   taxRate: 6,
   includeFulfillment: false,
   includeDeliveryToWb: false,
-  manualFboCommissionRate: 18,
-  manualFbsCommissionRate: 21.5,
   manualBuyoutRate: 90,
-  manualLocalOrderShare: 100,
+  manualLocalOrderShare: 50,
   manualStorageDays: 30,
   manualDeliveryToWbPerUnit: 0,
   packagingCost: 0,
@@ -65,7 +65,27 @@ export default function WbCalculatorPage() {
   const [resultMode, setResultMode] = useState<ResultMode>("fbo");
   const [input, setInput] = useState<CalculatorInput>(initial);
   const [flash, setFlash] = useState(false);
+  const [showLogisticsDetails, setShowLogisticsDetails] = useState(false);
+  const [showCommissionDetails, setShowCommissionDetails] = useState(false);
   const isAdvanced = mode === "advanced";
+  const commissionOptions = useMemo(
+    () =>
+      (rawCommissionTariffs as Array<{
+        id: string;
+        category: string;
+        subject: string;
+      }>).map((t) => ({
+        value: t.id,
+        label: `${t.subject} — ${t.category}`,
+      })),
+    [],
+  );
+
+  useEffect(() => {
+    if (input.commissionTariffId) return;
+    const first = (rawCommissionTariffs as Array<{ id: string }>)[0];
+    if (first) setInput((p) => ({ ...p, commissionTariffId: first.id }));
+  }, [input.commissionTariffId]);
 
   useEffect(() => {
     if (!input.includeTaxes) return;
@@ -92,14 +112,15 @@ export default function WbCalculatorPage() {
     () => getCalculationContext(input, isAdvanced),
     [input, isAdvanced],
   );
-  const results = useMemo(
-    () => ({
-      fbo: calculateUnitEconomics(input, "fbo", isAdvanced),
-      fbs: calculateUnitEconomics(input, "fbs", isAdvanced),
-    }),
+  const fboResult = useMemo(
+    () => calculateUnitEconomics(input, "fbo", isAdvanced),
     [input, isAdvanced],
   );
-  const r = results[resultMode];
+  const fbsResult = useMemo(
+    () => calculateUnitEconomics(input, "fbs", isAdvanced),
+    [input, isAdvanced],
+  );
+  const r = resultMode === "fbo" ? fboResult : fbsResult;
   const totalExpenses =
     r.costPrice +
     r.commission +
@@ -321,16 +342,14 @@ export default function WbCalculatorPage() {
             <Reveal show={isAdvanced}>
               <div className="pt-3 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field
-                  label="Комиссия WB, %"
-                  tip="Комиссия Wildberries от цены продажи. В простом режиме берётся среднее значение по категории, в расширенном режиме вы можете указать её вручную."
+                  label="Категория / предмет WB"
+                  tip="В расширенном режиме комиссия FBO/FBS подтягивается автоматически из справочника тарифов WB."
                 >
-                  <NumberInput
-                    value={input.manualFboCommissionRate}
-                    onChange={(v) =>
-                      setInput((p) => ({ ...p, manualFboCommissionRate: v }))
-                    }
-                    min={0}
-                    max={100}
+                  <AutocompleteSelect
+                    value={input.commissionTariffId}
+                    onChange={(v) => setInput((p) => ({ ...p, commissionTariffId: v }))}
+                    options={commissionOptions}
+                    placeholder="Начните вводить название предмета WB"
                   />
                 </Field>
                 <Field
@@ -479,8 +498,8 @@ export default function WbCalculatorPage() {
             )}
             <div className="grid grid-cols-2 gap-3">
               <Metric
-                label="Цена на WB"
-                value={<AnimatedNumber value={r.salePrice} type="currency" />}
+                label="Цена до скидки WB/СПП"
+                value={<AnimatedNumber value={r.priceBeforeWbDiscount} type="currency" />}
               />
               <Metric
                 label="Прибыль"
@@ -502,7 +521,7 @@ export default function WbCalculatorPage() {
                 }
               />
             </div>
-            <div className="p-4 rounded-2xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-white/[0.02]">
+            <div className="p-4 rounded-2xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-white/[0.02] transition-all duration-200 hover:border-cyan-400/45 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.18),0_14px_35px_rgba(6,182,212,0.08)]">
               <div className="text-xs text-white/60">Сумма всех расходов</div>
               <div className="text-2xl">
                 <AnimatedNumber value={r.totalExpenses} type="currency" />
@@ -511,40 +530,71 @@ export default function WbCalculatorPage() {
             <div className="rounded-2xl border border-white/10 overflow-hidden bg-[#0B131A]/70">
               <table className="w-full text-sm">
                 <tbody>
-                  <Row label="Цена на WB" value={r.salePrice} />
+                  <Row
+                    label="Цена до скидки WB/СПП"
+                    value={r.priceBeforeWbDiscount}
+                  />
+                  <Row label="Скидка WB/СПП" value={-r.platformDiscountAmount} />
                   <Row label="Себестоимость" value={-r.costPrice} />
-                  <Row label="Комиссия WB + эквайринг" value={-r.commission} />
-                  <SubRow
-                    label="Комиссия по тарифу"
-                    value={-r.commissionBreakdown.grossWbCommission}
+                  <ExpandableRow
+                    label="Комиссия WB + эквайринг"
+                    value={-r.commission}
+                    open={showCommissionDetails}
+                    onToggle={() => setShowCommissionDetails((v) => !v)}
                   />
-                  <SubRow
-                    label="Корректировка на скидку WB/СПП"
-                    value={r.commissionBreakdown.platformDiscountAmount}
+                  {showCommissionDetails && (
+                    <>
+                      {r.commissionBreakdown.grossWbCommission !== 0 && (
+                        <SubRow
+                          label="Комиссия по тарифу"
+                          value={-r.commissionBreakdown.grossWbCommission}
+                        />
+                      )}
+                      {r.commissionBreakdown.acquiringCost !== 0 && (
+                        <SubRow
+                          label="Эквайринг"
+                          value={-r.commissionBreakdown.acquiringCost}
+                        />
+                      )}
+                    </>
+                  )}
+                  <ExpandableRow
+                    label="Логистика WB"
+                    value={-r.logistics}
+                    open={showLogisticsDetails}
+                    onToggle={() => setShowLogisticsDetails((v) => !v)}
                   />
-                  <SubRow
-                    label="Эквайринг"
-                    value={-r.commissionBreakdown.acquiringCost}
-                  />
-                  <Row label="Логистика WB" value={-r.logistics} />
-                  <SubRow
-                    label="Базовая логистика"
-                    value={-r.logisticsBreakdown.baseLogistics}
-                  />
-                  <SubRow
-                    label="Обратная логистика по невыкупу"
-                    value={-r.logisticsBreakdown.reverseLogisticsPerSoldUnit}
-                  />
-                  {resultMode === "fbo" && (
+                  {showLogisticsDetails && (
                     <>
                       <SubRow
-                        label="Коэффициенты складов"
-                        value={-r.logisticsBreakdown.warehouseCoefficientExtra}
+                        label="Базовая логистика"
+                        value={-r.logisticsBreakdown.baseLogistics}
                       />
                       <SubRow
-                        label="Локализация"
-                        value={-r.logisticsBreakdown.localizationExtra}
+                        label="Обратная логистика по невыкупу"
+                        value={-r.logisticsBreakdown.reverseLogisticsPerSoldUnit}
                       />
+                      {resultMode === "fbo" &&
+                        r.logisticsBreakdown.warehouseCoefficientExtra !== 0 && (
+                          <SubRow
+                            label="Коэффициенты складов"
+                            value={-r.logisticsBreakdown.warehouseCoefficientExtra}
+                          />
+                        )}
+                      {resultMode === "fbo" &&
+                        r.logisticsBreakdown.localizationExtra !== 0 && (
+                          <SubRow
+                            label="Локализация"
+                            value={-r.logisticsBreakdown.localizationExtra}
+                          />
+                        )}
+                      {resultMode === "fbo" &&
+                        r.logisticsBreakdown.salesDistributionCost !== 0 && (
+                          <SubRow
+                            label="ИРП"
+                            value={-r.logisticsBreakdown.salesDistributionCost}
+                          />
+                        )}
                     </>
                   )}
                   {r.storage > 0 && (
@@ -630,70 +680,191 @@ function CustomSelect({
   options: { value: string; label: string }[];
 }) {
   const [open, setOpen] = useState(false);
-  const [pos, setPos] = useState({ left: 0, top: 0, width: 0, up: false });
+  const [pos, setPos] = useState({ left: 0, top: 0, width: 0 });
   const ref = useRef<HTMLButtonElement | null>(null);
   const selected = options.find((o) => o.value === value);
 
   useEffect(() => {
     if (!open || !ref.current) return;
-    const r = ref.current.getBoundingClientRect();
-    const menuHeight = Math.min(options.length * 38 + 10, 280);
-    const up = window.innerHeight - r.bottom < menuHeight + 12;
-    setPos({
-      left: r.left,
-      top: up ? r.top - menuHeight - 8 : r.bottom + 8,
-      width: r.width,
-      up,
-    });
+    const update = () => {
+      if (!ref.current) return;
+      const r = ref.current.getBoundingClientRect();
+      const smallList = options.length <= 10;
+      const preferred = options.length * 38 + 10;
+      const maxHeight = Math.min(window.innerHeight - 20, smallList ? preferred : 280);
+      const up = window.innerHeight - r.bottom < maxHeight + 12;
+      setPos({ left: r.left, top: up ? Math.max(8, r.top - maxHeight - 8) : r.bottom + 8, width: r.width });
+    };
+    update();
+    const close = () => setOpen(false);
+    window.addEventListener('resize', close);
+    window.addEventListener('scroll', close, true);
+    return () => {
+      window.removeEventListener('resize', close);
+      window.removeEventListener('scroll', close, true);
+    };
   }, [open, options.length]);
 
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node))
-        setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
+    document.addEventListener('mousedown', onDoc);
+    return () => document.removeEventListener('mousedown', onDoc);
   }, []);
 
   return (
     <>
-      <button
-        ref={ref}
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className={cls + " text-left pr-9 relative"}
-      >
-        {selected?.label ?? "Выберите"}
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/45">
-          ▾
-        </span>
+      <button ref={ref} type="button" onClick={() => setOpen((v) => !v)} className={cls + ' text-left pr-9 relative'}>
+        {selected?.label ?? 'Выберите'}
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/45">▾</span>
       </button>
       {open &&
         createPortal(
-          <div
-            style={{
-              position: "fixed",
-              left: pos.left,
-              top: pos.top,
-              width: pos.width,
-              zIndex: 1200,
-            }}
-          >
-            <div className="rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/30 p-1 max-h-[280px] overflow-auto">
+          <div style={{ position: 'fixed', left: pos.left, top: pos.top, width: pos.width, zIndex: 1200 }}>
+            <div className={`rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/30 p-1 ${options.length <= 10 ? '' : 'max-h-[280px] overflow-auto'}`}>
               {options.map((o) => (
                 <button
                   key={o.value}
                   type="button"
-                  onClick={() => {
+                  onMouseDown={(e) => {
+                    e.preventDefault();
                     onChange(o.value);
                     setOpen(false);
                   }}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${o.value === value ? "bg-cyan-500/20 text-cyan-200" : "text-white/80 hover:bg-cyan-500/12 hover:text-white"}`}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${o.value === value ? 'bg-cyan-500/20 text-cyan-200' : 'text-white/80 hover:bg-cyan-500/12 hover:text-white'}`}
                 >
                   {o.label}
                 </button>
               ))}
+            </div>
+          </div>,
+          document.body,
+        )}
+    </>
+  );
+}
+
+function AutocompleteSelect({ value, onChange, options, placeholder }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; placeholder: string; }) {
+  const [query, setQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [error, setError] = useState("");
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState({ left: 0, top: 0, width: 0 });
+  const ref = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const selected = options.find((o) => o.value === value);
+  const minChars = 2;
+  const filtered = useMemo(() => {
+    const normalized = debouncedSearch.trim().toLowerCase();
+    if (normalized.length < minChars) return [];
+    return options
+      .filter((o) => o.label.toLowerCase().includes(normalized))
+      .slice(0, 25);
+  }, [debouncedSearch, options]);
+
+  useEffect(() => {
+    setQuery(selected?.label ?? "");
+  }, [selected?.label]);
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedSearch(query);
+    }, 200);
+    return () => window.clearTimeout(timer);
+  }, [query]);
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [debouncedSearch]);
+  useEffect(() => {
+    if (!open || !ref.current) return;
+    const update = () => {
+      if (!ref.current) return;
+      const r = ref.current.getBoundingClientRect();
+      setPos({ left: r.left, top: r.bottom + 8, width: r.width });
+    };
+    update();
+    const close = () => setOpen(false);
+    window.addEventListener('resize', close);
+    window.addEventListener('scroll', close, true);
+    return () => {
+      window.removeEventListener('resize', close);
+      window.removeEventListener('scroll', close, true);
+    };
+  }, [open]);
+
+  const selectOption = (opt: { value: string; label: string }) => {
+    onChange(opt.value);
+    setQuery(opt.label);
+    setError("");
+    setOpen(false);
+  };
+
+  const validateOnBlur = () => {
+    const valid = options.some((o) => o.label === query);
+    if (!valid) {
+      setQuery(selected?.label ?? "");
+      setError("Категория не выбрана. Выберите вариант из списка.");
+    } else {
+      setError("");
+    }
+    setOpen(false);
+  };
+
+  return (
+    <>
+      <div ref={ref}>
+        <input
+          ref={inputRef}
+          className={`${cls} ${error ? "border-red-400/60" : ""}`}
+          value={query}
+          placeholder={placeholder}
+          onFocus={() => setOpen(true)}
+          onBlur={validateOnBlur}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setError("");
+            setOpen(true);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setOpen(false);
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              setActiveIndex((i) => Math.min(i + 1, Math.max(filtered.length - 1, 0)));
+            }
+            if (e.key === "ArrowUp") {
+              e.preventDefault();
+              setActiveIndex((i) => Math.max(i - 1, 0));
+            }
+            if (e.key === "Enter" && filtered[activeIndex]) {
+              e.preventDefault();
+              selectOption(filtered[activeIndex]);
+            }
+          }}
+        />
+      </div>
+      {error && <p className="mt-1 text-xs text-red-300">{error}</p>}
+      {open &&
+        createPortal(
+          <div style={{ position: "fixed", left: pos.left, top: pos.top, width: pos.width, zIndex: 1200 }}>
+            <div className="rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/30 p-1 max-h-[320px] overflow-auto">
+              {debouncedSearch.trim().length < minChars ? null : filtered.length === 0 ? (
+                <div className="px-3 py-2 text-sm text-white/55">Ничего не найдено. Попробуйте другое название.</div>
+              ) : (
+                filtered.map((o, i) => (
+                  <button
+                    key={o.value}
+                    type="button"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      selectOption(o);
+                    }}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-sm ${i === activeIndex ? "bg-cyan-500/20 text-cyan-100" : "text-white/80 hover:bg-cyan-500/12 hover:text-white"}`}
+                  >
+                    {o.label}
+                  </button>
+                ))
+              )}
             </div>
           </div>,
           document.body,
@@ -732,6 +903,18 @@ function Tip({ text }: { text: string }) {
     const top = r.bottom + 8;
     setXy({ left, top });
   }, [open]);
+  useEffect(() => {
+    const close = () => setOpen(false);
+    document.addEventListener("mousedown", close);
+    window.addEventListener("scroll", close, true);
+    window.addEventListener("resize", close);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      window.removeEventListener("scroll", close, true);
+      window.removeEventListener("resize", close);
+      setOpen(false);
+    };
+  }, []);
   return (
     <>
       <button
@@ -739,6 +922,7 @@ function Tip({ text }: { text: string }) {
         type="button"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
+        onBlur={() => setOpen(false)}
         onClick={() => setOpen((v) => !v)}
         className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-white/20 text-[10px] text-white/50 cursor-pointer hover:border-cyan-400/40 hover:text-cyan-200 transition-colors"
       >
@@ -775,14 +959,16 @@ function CompactToggle({
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className="w-full py-1.5 flex items-center justify-between text-sm"
+      className="w-full py-1.5 flex items-center justify-between text-sm group"
     >
-      <span className="text-white/80">{label}</span>
+      <span className="text-white/80 transition-colors group-hover:text-cyan-100">
+        {label}
+      </span>
       <span
-        className={`w-10 h-6 rounded-full p-1 transition-all ${checked ? "bg-cyan-500/40" : "bg-white/15"}`}
+        className={`w-10 h-6 rounded-full p-1 transition-all duration-200 group-hover:shadow-[0_0_0_1px_rgba(34,211,238,0.18),0_6px_14px_rgba(6,182,212,0.14)] ${checked ? "bg-cyan-500/40 group-hover:bg-cyan-500/55" : "bg-white/15 group-hover:bg-white/25"}`}
       >
         <span
-          className={`block w-4 h-4 rounded-full bg-white transition-transform ${checked ? "translate-x-4" : ""}`}
+          className={`block w-4 h-4 rounded-full bg-white transition-transform duration-200 ${checked ? "translate-x-4" : ""}`}
         />
       </span>
     </button>
@@ -802,7 +988,7 @@ function Segmented({
     options.findIndex((o) => o[0] === value),
   );
   return (
-    <div className="relative inline-grid grid-cols-2 p-1 rounded-xl border border-white/10 bg-white/[0.03]">
+    <div className="relative inline-grid grid-cols-2 p-1 rounded-xl border border-white/10 bg-white/[0.03] transition-all duration-200 hover:border-cyan-400/35 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.14),0_10px_26px_rgba(6,182,212,0.08)]">
       <div
         className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-cyan-500/20 border border-cyan-400/30 transition-transform duration-300 ${i === 1 ? "translate-x-full" : ""}`}
       />
@@ -810,7 +996,7 @@ function Segmented({
         <button
           key={k}
           onClick={() => onChange(k)}
-          className={`relative z-10 px-4 py-2 text-sm ${value === k ? "text-cyan-200" : "text-white/65"}`}
+          className={`relative z-10 px-4 py-2 text-sm rounded-lg transition-all duration-200 ${value === k ? "text-cyan-200" : "text-white/65 hover:text-cyan-100 hover:bg-cyan-500/10"}`}
         >
           {l}
         </button>
@@ -875,12 +1061,46 @@ function Metric({
         ? "text-red-300"
         : "text-white";
   return (
-    <div className="p-4 rounded-2xl border border-white/10 bg-[#0C141B]">
+    <div className="p-4 rounded-2xl border border-white/10 bg-[#0C141B] transition-all duration-200 hover:border-cyan-400/45 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.22),0_14px_35px_rgba(6,182,212,0.10)]">
       <div className="text-xs text-white/60 mb-1">{label}</div>
       <div className={`text-2xl ${c}`}>{value}</div>
     </div>
   );
 }
+function ExpandableRow({
+  label,
+  value,
+  open,
+  onToggle,
+}: {
+  label: string;
+  value: number;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <tr className="border-b border-white/5">
+      <td className="px-3 py-2 text-white/70">
+        <button
+          type="button"
+          onClick={onToggle}
+          className="inline-flex items-center gap-2 text-left"
+        >
+          <span
+            className={`transition-transform duration-200 ${open ? "rotate-90" : ""}`}
+          >
+            ▸
+          </span>
+          {label}
+        </button>
+      </td>
+      <td className="px-3 py-2 text-right text-white/90">
+        <AnimatedNumber value={value} type="currency" />
+      </td>
+    </tr>
+  );
+}
+
 function Row({
   label,
   value,
