@@ -18,11 +18,11 @@ export default function Header({ currentPage }: HeaderProps) {
   return (
     <>
       <nav className="relative z-50 max-w-[1400px] mx-auto px-5 md:px-8 lg:px-10 py-6 flex items-center justify-between border-b border-white/5">
-        <a href="/" className="flex items-center" aria-label="На главную">
+        <a href="/" className="flex items-center lg:-translate-x-[300px]" aria-label="На главную">
           <img src="/favicon.svg" alt="Zubarev Lab" className="w-14 h-14" />
         </a>
 
-        <div className="hidden md:flex items-center gap-10 lg:gap-12 xl:gap-14 ml-auto">
+        <div className="hidden md:flex items-center gap-10 lg:gap-12 xl:gap-14 ml-auto lg:translate-x-[100px]">
           {landingLinks.map((link) => (
             <a key={link.label} href={link.href} className="text-sm text-white/60 hover:text-white/90 transition-colors whitespace-nowrap">
               {link.label}

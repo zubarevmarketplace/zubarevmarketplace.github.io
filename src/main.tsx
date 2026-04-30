@@ -8,14 +8,6 @@ const isCalculatorRoute = window.location.pathname === '/tools/wb-calculator';
 
 if (isCalculatorRoute) {
   document.title = 'WB калькулятор юнит-экономики';
-
-  let robotsMeta = document.querySelector('meta[name="robots"]');
-  if (!robotsMeta) {
-    robotsMeta = document.createElement('meta');
-    robotsMeta.setAttribute('name', 'robots');
-    document.head.appendChild(robotsMeta);
-  }
-  robotsMeta.setAttribute('content', 'noindex,nofollow');
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
