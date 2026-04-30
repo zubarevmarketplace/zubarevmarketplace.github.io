@@ -1,7 +1,7 @@
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import { useState, Fragment } from 'react';
 import Layout from './components/layout/Layout';
-import { Send, MessageCircle, FileText, TrendingUp } from 'lucide-react';
+import { Send, MessageCircle, Phone, FileText, TrendingUp } from 'lucide-react';
 import carloLogo from '../imports/Carlo_LexOne_(var3).png';
 import phoenixLogo from '../imports/аватарка-Феникс3.png';
 import formulaLogo from '../imports/Formula_Natural.jpg';
