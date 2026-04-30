@@ -511,7 +511,7 @@ export default function WbCalculatorPage() {
                 }
               />
             </div>
-            <div className="p-4 rounded-2xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-white/[0.02]">
+            <div className="p-4 rounded-2xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-white/[0.02] transition-all duration-200 hover:border-cyan-400/45 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.18),0_14px_35px_rgba(6,182,212,0.08)]">
               <div className="text-xs text-white/60">Сумма всех расходов</div>
               <div className="text-2xl">
                 <AnimatedNumber value={r.totalExpenses} type="currency" />
@@ -1041,7 +1041,7 @@ function Metric({
         ? "text-red-300"
         : "text-white";
   return (
-    <div className="p-4 rounded-2xl border border-white/10 bg-[#0C141B]">
+    <div className="p-4 rounded-2xl border border-white/10 bg-[#0C141B] transition-all duration-200 hover:border-cyan-400/45 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.22),0_14px_35px_rgba(6,182,212,0.10)]">
       <div className="text-xs text-white/60 mb-1">{label}</div>
       <div className={`text-2xl ${c}`}>{value}</div>
     </div>
