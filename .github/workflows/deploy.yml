@@ -27,14 +27,12 @@ jobs:
           if [ -f robots.txt ]; then cp robots.txt dist/; fi
           if [ -f sitemap.xml ]; then cp sitemap.xml dist/; fi
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+      - name: Create SPA fallback for GitHub Pages
+        run: cp dist/index.html dist/404.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+

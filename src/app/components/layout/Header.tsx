@@ -29,7 +29,7 @@ export default function Header({ currentPage }: HeaderProps) {
             </a>
           ))}
           <a
-            href="/tools/wb-calculator"
+            href="/calculator"
             className={`text-sm transition-colors ${currentPage === 'calculator' ? 'text-white' : 'text-white/60 hover:text-white/90'}`}
           >
             Калькулятор
@@ -64,7 +64,7 @@ export default function Header({ currentPage }: HeaderProps) {
               </a>
             ))}
             <a
-              href="/tools/wb-calculator"
+              href="/calculator"
               onClick={() => setMobileMenuOpen(false)}
               className={`block transition-colors py-2 ${currentPage === 'calculator' ? 'text-white' : 'text-white/60 hover:text-white/90'}`}
             >

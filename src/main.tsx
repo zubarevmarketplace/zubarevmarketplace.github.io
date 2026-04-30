@@ -4,7 +4,8 @@ import App from './app/App';
 import WbCalculatorPage from './app/pages/WbCalculatorPage';
 import './styles/index.css';
 
-const isCalculatorRoute = window.location.pathname === '/tools/wb-calculator';
+const calculatorPaths = new Set(['/calculator', '/tools/wb-calculator']);
+const isCalculatorRoute = calculatorPaths.has(window.location.pathname);
 
 if (isCalculatorRoute) {
   document.title = 'WB калькулятор юнит-экономики';
