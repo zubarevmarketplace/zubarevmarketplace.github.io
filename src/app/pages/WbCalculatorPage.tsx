@@ -14,6 +14,7 @@ import type {
   ResultMode,
   TaxMode,
 } from "../types/calculator";
+import Layout from "../components/layout/Layout";
 
 const initial: CalculatorInput = {
   categoryId: "home",
@@ -149,7 +150,7 @@ export default function WbCalculatorPage() {
   ] as const;
 
   return (
-    <div className="min-h-screen bg-[#050A0E] text-white overflow-x-hidden">
+    <Layout currentPage="calculator">
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-cyan-500/25 rounded-full blur-[150px]" />
         <div className="absolute top-0 -right-1/4 w-1/2 h-1/2 bg-amber-500/20 rounded-full blur-[150px]" />
@@ -628,7 +629,7 @@ export default function WbCalculatorPage() {
           </div>
         </div>
       </section>
-    </div>
+    </Layout>
   );
 }
 

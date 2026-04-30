@@ -1,6 +1,7 @@
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import { useState, Fragment } from 'react';
-import { Send, MessageCircle, Phone, Mail, FileText, TrendingUp, Menu, X } from 'lucide-react';
+import Layout from './components/layout/Layout';
+import { Send, MessageCircle, Phone, FileText, TrendingUp } from 'lucide-react';
 import carloLogo from '../imports/Carlo_LexOne_(var3).png';
 import phoenixLogo from '../imports/аватарка-Феникс3.png';
 import formulaLogo from '../imports/Formula_Natural.jpg';
@@ -18,11 +19,10 @@ export default function App() {
   const [selectedCase, setSelectedCase] = useState<number | null>(null);
   const [activeAnalyticsTab, setActiveAnalyticsTab] = useState('economics');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [floatingButtonExpanded, setFloatingButtonExpanded] = useState(false);
   const [mobileDiagnosticTab, setMobileDiagnosticTab] = useState<'check' | 'problems' | 'results'>('check');
   return (
-    <div className="min-h-screen bg-[#050A0E] text-white overflow-x-hidden">
+    <Layout currentPage="home">
       <style>{`
         html {
           scroll-behavior: smooth;
@@ -54,71 +54,6 @@ export default function App() {
         <div className="absolute top-1/3 left-1/4 w-1/3 h-1/3 bg-purple-500/25 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 right-1/4 w-1/2 h-1/2 bg-cyan-600/25 rounded-full blur-[140px]" />
       </div>
-
-      {/* Navigation */}
-      <nav className="relative z-50 px-4 md:px-8 py-6 flex items-center justify-between max-w-[1400px] mx-auto border-b border-white/5">
-        <div className="text-xl tracking-tight">NZ</div>
-
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
-          <a href="#about" className="text-sm text-white/60 hover:text-white/90 transition-colors">Обо мне</a>
-          <a href="#formats" className="text-sm text-white/60 hover:text-white/90 transition-colors">Услуги</a>
-          <a href="#cases" className="text-sm text-white/60 hover:text-white/90 transition-colors">Кейсы</a>
-          <a href="#contacts" className="text-sm text-white/60 hover:text-white/90 transition-colors">Контакты</a>
-          <a href="#contacts" className="px-5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm transition-all">
-            Связаться
-          </a>
-        </div>
-
-        {/* Mobile Menu */}
-        <div className="flex md:hidden items-center gap-4">
-          <a href="#contacts" className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm transition-all">
-            Связаться
-          </a>
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-white/60 hover:text-white/90 transition-colors"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu Dropdown */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed top-[73px] left-0 right-0 z-40 bg-[#050A0E]/95 backdrop-blur-lg border-b border-white/5">
-          <div className="px-8 py-6 space-y-4">
-            <a
-              href="#about"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-white/60 hover:text-white/90 transition-colors py-2"
-            >
-              Обо мне
-            </a>
-            <a
-              href="#formats"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-white/60 hover:text-white/90 transition-colors py-2"
-            >
-              Услуги
-            </a>
-            <a
-              href="#cases"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-white/60 hover:text-white/90 transition-colors py-2"
-            >
-              Кейсы
-            </a>
-            <a
-              href="#contacts"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-white/60 hover:text-white/90 transition-colors py-2"
-            >
-              Контакты
-            </a>
-          </div>
-        </div>
-      )}
 
       {/* Hero Section */}
       <section className="relative z-10 px-4 md:px-8 py-8 md:py-12 max-w-[1400px] mx-auto">
@@ -1456,71 +1391,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-white/5 bg-white/[0.01]">
-        <div className="max-w-[1400px] mx-auto px-8 py-8 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 mb-8 md:mb-12">
-            {/* Description */}
-            <div className="md:col-span-3">
-              <div className="text-xl mb-4">NZ</div>
-              <p className="text-sm text-white/60 leading-relaxed">
-                Аудит, аналитика и консультационное сопровождение для продавцов на Wildberries и Ozon.
-              </p>
-            </div>
-
-            {/* Navigation */}
-            <div className="md:col-span-3 md:col-start-5">
-              <h4 className="text-sm mb-4 text-white/90">Навигация</h4>
-              <ul className="space-y-2 text-sm text-white/60">
-                <li>
-                  <a href="#formats" className="hover:text-white/90 transition-colors">Услуги</a>
-                </li>
-                <li>
-                  <a href="#diagnostics" className="hover:text-white/90 transition-colors">Диагностика</a>
-                </li>
-                <li>
-                  <a href="#cases" className="hover:text-white/90 transition-colors">Кейсы</a>
-                </li>
-                <li>
-                  <a href="#about" className="hover:text-white/90 transition-colors">Обо мне</a>
-                </li>
-                <li>
-                  <a href="#faq" className="hover:text-white/90 transition-colors">FAQ</a>
-                </li>
-                <li>
-                  <a href="#contacts" className="hover:text-white/90 transition-colors">Контакты</a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contacts */}
-            <div className="md:col-span-4">
-              <h4 className="text-sm mb-4 text-white/90">Контакты</h4>
-              <ul className="space-y-3 text-sm text-white/60">
-                <li className="flex items-center gap-3">
-                  <Send className="w-4 h-4 text-[#0088cc]" />
-                  <span>Telegram: @Kolyanist</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <Phone className="w-4 h-4 text-[#25D366]" />
-                  <span>WhatsApp/Max: +7 (904) 632-00-24</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <Mail className="w-4 h-4 text-cyan-400" />
-                  <span>Email: zubarev.marketplace@gmail.com</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Bottom */}
-          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
-            <p>Маркетплейс-диагностика, аналитика и управленческие решения.</p>
-            <p>© 2026. Зубарев Николай</p>
-          </div>
-        </div>
-      </footer>
-
       {/* Floating CTA Button (Mobile Only) */}
       <div className="md:hidden fixed bottom-8 right-0 z-50">
         <button
@@ -1541,7 +1411,7 @@ export default function App() {
           <span className="whitespace-nowrap text-sm font-medium">Обсудить задачу</span>
         </button>
       </div>
-    </div>
+    </Layout>
   );
 }
 
