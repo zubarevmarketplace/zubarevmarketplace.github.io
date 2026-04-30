@@ -25,7 +25,7 @@ const initial: CalculatorInput = {
   heightCm: 10,
   geoPresetId: "allRussia",
   platformDiscountRatePercent: 30,
-  weightKg: 0,
+  weightKg: 1,
   includeAds: true,
   adRate: 10,
   includeTaxes: true,
@@ -34,7 +34,7 @@ const initial: CalculatorInput = {
   includeFulfillment: false,
   includeDeliveryToWb: false,
   manualBuyoutRate: 90,
-  manualLocalOrderShare: 100,
+  manualLocalOrderShare: 50,
   manualStorageDays: 30,
   manualDeliveryToWbPerUnit: 0,
   packagingCost: 0,
@@ -65,6 +65,7 @@ export default function WbCalculatorPage() {
   const [resultMode, setResultMode] = useState<ResultMode>("fbo");
   const [input, setInput] = useState<CalculatorInput>(initial);
   const [flash, setFlash] = useState(false);
+  const [showLogisticsDetails, setShowLogisticsDetails] = useState(false);
   const isAdvanced = mode === "advanced";
 
   useEffect(() => {
@@ -330,13 +331,14 @@ export default function WbCalculatorPage() {
                   label="Категория / предмет WB"
                   tip="В расширенном режиме комиссия FBO/FBS подтягивается автоматически из справочника тарифов WB."
                 >
-                  <CustomSelect
+                  <AutocompleteSelect
                     value={input.commissionTariffId}
                     onChange={(v) => setInput((p) => ({ ...p, commissionTariffId: v }))}
                     options={(rawCommissionTariffs as Array<{ id: string; category: string; subject: string }>).map((t) => ({
                       value: t.id,
-                      label: `${t.category} → ${t.subject}`,
+                      label: `${t.subject} — ${t.category}`,
                     }))}
+                    placeholder="Начните вводить название предмета WB"
                   />
                 </Field>
                 <Field
@@ -485,8 +487,8 @@ export default function WbCalculatorPage() {
             )}
             <div className="grid grid-cols-2 gap-3">
               <Metric
-                label="Цена на WB"
-                value={<AnimatedNumber value={r.salePrice} type="currency" />}
+                label="Цена до скидки WB/СПП"
+                value={<AnimatedNumber value={r.priceBeforeWbDiscount} type="currency" />}
               />
               <Metric
                 label="Прибыль"
@@ -517,7 +519,11 @@ export default function WbCalculatorPage() {
             <div className="rounded-2xl border border-white/10 overflow-hidden bg-[#0B131A]/70">
               <table className="w-full text-sm">
                 <tbody>
-                  <Row label="Цена на WB" value={r.salePrice} />
+                  <Row
+                    label="Цена до скидки WB/СПП"
+                    value={r.priceBeforeWbDiscount}
+                  />
+                  <Row label="Скидка WB/СПП" value={-r.platformDiscountAmount} />
                   <Row label="Себестоимость" value={-r.costPrice} />
                   <Row label="Комиссия WB + эквайринг" value={-r.commission} />
                   <SubRow
@@ -525,34 +531,48 @@ export default function WbCalculatorPage() {
                     value={-r.commissionBreakdown.grossWbCommission}
                   />
                   <SubRow
-                    label="Корректировка на скидку WB/СПП"
-                    value={r.commissionBreakdown.platformDiscountAmount}
-                  />
-                  <SubRow
                     label="Эквайринг"
                     value={-r.commissionBreakdown.acquiringCost}
                   />
-                  <Row label="Логистика WB" value={-r.logistics} />
-                  <SubRow
-                    label="Базовая логистика"
-                    value={-r.logisticsBreakdown.baseLogistics}
+                  <ExpandableRow
+                    label="Логистика WB"
+                    value={-r.logistics}
+                    open={showLogisticsDetails}
+                    onToggle={() => setShowLogisticsDetails((v) => !v)}
                   />
-                  <SubRow
-                    label="Обратная логистика по невыкупу"
-                    value={-r.logisticsBreakdown.reverseLogisticsPerSoldUnit}
-                  />
-                  {resultMode === "fbo" && (
+                  <Reveal show={showLogisticsDetails}>
                     <>
                       <SubRow
-                        label="Коэффициенты складов"
-                        value={-r.logisticsBreakdown.warehouseCoefficientExtra}
+                        label="Базовая логистика"
+                        value={-r.logisticsBreakdown.baseLogistics}
                       />
                       <SubRow
-                        label="Локализация"
-                        value={-r.logisticsBreakdown.localizationExtra}
+                        label="Обратная логистика по невыкупу"
+                        value={-r.logisticsBreakdown.reverseLogisticsPerSoldUnit}
                       />
+                      {resultMode === "fbo" &&
+                        r.logisticsBreakdown.warehouseCoefficientExtra !== 0 && (
+                          <SubRow
+                            label="Коэффициенты складов"
+                            value={-r.logisticsBreakdown.warehouseCoefficientExtra}
+                          />
+                        )}
+                      {resultMode === "fbo" &&
+                        r.logisticsBreakdown.localizationExtra !== 0 && (
+                          <SubRow
+                            label="Локализация"
+                            value={-r.logisticsBreakdown.localizationExtra}
+                          />
+                        )}
+                      {resultMode === "fbo" &&
+                        r.logisticsBreakdown.salesDistributionCost !== 0 && (
+                          <SubRow
+                            label="ИРП"
+                            value={-r.logisticsBreakdown.salesDistributionCost}
+                          />
+                        )}
                     </>
-                  )}
+                  </Reveal>
                   {r.storage > 0 && (
                     <Row label="Хранение WB" value={-r.storage} />
                   )}
@@ -636,66 +656,59 @@ function CustomSelect({
   options: { value: string; label: string }[];
 }) {
   const [open, setOpen] = useState(false);
-  const [pos, setPos] = useState({ left: 0, top: 0, width: 0, up: false });
+  const [pos, setPos] = useState({ left: 0, top: 0, width: 0 });
   const ref = useRef<HTMLButtonElement | null>(null);
   const selected = options.find((o) => o.value === value);
 
   useEffect(() => {
     if (!open || !ref.current) return;
-    const r = ref.current.getBoundingClientRect();
-    const menuHeight = Math.min(options.length * 38 + 10, 280);
-    const up = window.innerHeight - r.bottom < menuHeight + 12;
-    setPos({
-      left: r.left,
-      top: up ? r.top - menuHeight - 8 : r.bottom + 8,
-      width: r.width,
-      up,
-    });
+    const update = () => {
+      if (!ref.current) return;
+      const r = ref.current.getBoundingClientRect();
+      const smallList = options.length <= 10;
+      const preferred = options.length * 38 + 10;
+      const maxHeight = Math.min(window.innerHeight - 20, smallList ? preferred : 280);
+      const up = window.innerHeight - r.bottom < maxHeight + 12;
+      setPos({ left: r.left, top: up ? Math.max(8, r.top - maxHeight - 8) : r.bottom + 8, width: r.width });
+    };
+    update();
+    const close = () => setOpen(false);
+    window.addEventListener('resize', close);
+    window.addEventListener('scroll', close, true);
+    return () => {
+      window.removeEventListener('resize', close);
+      window.removeEventListener('scroll', close, true);
+    };
   }, [open, options.length]);
 
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node))
-        setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
+    document.addEventListener('mousedown', onDoc);
+    return () => document.removeEventListener('mousedown', onDoc);
   }, []);
 
   return (
     <>
-      <button
-        ref={ref}
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className={cls + " text-left pr-9 relative"}
-      >
-        {selected?.label ?? "Выберите"}
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/45">
-          ▾
-        </span>
+      <button ref={ref} type="button" onClick={() => setOpen((v) => !v)} className={cls + ' text-left pr-9 relative'}>
+        {selected?.label ?? 'Выберите'}
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/45">▾</span>
       </button>
       {open &&
         createPortal(
-          <div
-            style={{
-              position: "fixed",
-              left: pos.left,
-              top: pos.top,
-              width: pos.width,
-              zIndex: 1200,
-            }}
-          >
-            <div className="rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/30 p-1 max-h-[280px] overflow-auto">
+          <div style={{ position: 'fixed', left: pos.left, top: pos.top, width: pos.width, zIndex: 1200 }}>
+            <div className={`rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/30 p-1 ${options.length <= 10 ? '' : 'max-h-[280px] overflow-auto'}`}>
               {options.map((o) => (
                 <button
                   key={o.value}
                   type="button"
+                  onMouseDown={(e) => e.preventDefault()}
                   onClick={() => {
                     onChange(o.value);
                     setOpen(false);
                   }}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${o.value === value ? "bg-cyan-500/20 text-cyan-200" : "text-white/80 hover:bg-cyan-500/12 hover:text-white"}`}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${o.value === value ? 'bg-cyan-500/20 text-cyan-200' : 'text-white/80 hover:bg-cyan-500/12 hover:text-white'}`}
                 >
                   {o.label}
                 </button>
@@ -706,6 +719,35 @@ function CustomSelect({
         )}
     </>
   );
+}
+
+function AutocompleteSelect({ value, onChange, options, placeholder }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; placeholder: string; }) {
+  const [query, setQuery] = useState('');
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState({ left: 0, top: 0, width: 0 });
+  const ref = useRef<HTMLDivElement | null>(null);
+  const selected = options.find((o) => o.value === value);
+  const filtered = query.trim().length === 0 ? [] : options.filter((o) => o.label.toLowerCase().includes(query.toLowerCase())).slice(0, 25);
+
+  useEffect(() => { setQuery(selected?.label ?? ''); }, [selected?.label]);
+  useEffect(() => {
+    if (!open || !ref.current) return;
+    const update = () => {
+      if (!ref.current) return;
+      const r = ref.current.getBoundingClientRect();
+      setPos({ left: r.left, top: r.bottom + 8, width: r.width });
+    };
+    update();
+    const close = () => setOpen(false);
+    window.addEventListener('resize', close);
+    window.addEventListener('scroll', close, true);
+    return () => {
+      window.removeEventListener('resize', close);
+      window.removeEventListener('scroll', close, true);
+    };
+  }, [open]);
+
+  return (<><div ref={ref}><input className={cls} value={query} placeholder={placeholder} onFocus={() => setOpen(true)} onChange={(e) => { setQuery(e.target.value); setOpen(true); }} /></div>{open && filtered.length > 0 && createPortal(<div style={{position:'fixed', left: pos.left, top: pos.top, width: pos.width, zIndex:1200}}><div className='rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/30 p-1 max-h-[320px] overflow-auto'>{filtered.map((o)=><button key={o.value} type='button' onMouseDown={(e)=>e.preventDefault()} onClick={()=>{onChange(o.value); setQuery(o.label); setOpen(false);}} className='w-full text-left px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-cyan-500/12 hover:text-white'>{o.label}</button>)}</div></div>, document.body)}</>);
 }
 
 function Field({
@@ -887,6 +929,40 @@ function Metric({
     </div>
   );
 }
+function ExpandableRow({
+  label,
+  value,
+  open,
+  onToggle,
+}: {
+  label: string;
+  value: number;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <tr className="border-b border-white/5">
+      <td className="px-3 py-2 text-white/70">
+        <button
+          type="button"
+          onClick={onToggle}
+          className="inline-flex items-center gap-2 text-left"
+        >
+          <span
+            className={`transition-transform duration-200 ${open ? "rotate-90" : ""}`}
+          >
+            ▸
+          </span>
+          {label}
+        </button>
+      </td>
+      <td className="px-3 py-2 text-right text-white/90">
+        <AnimatedNumber value={value} type="currency" />
+      </td>
+    </tr>
+  );
+}
+
 function Row({
   label,
   value,
