@@ -36,7 +36,10 @@
 .webview-safe .app-shell,
 .webview-safe .webview-safe-bg {
   background-color: #050b0f !important;
-  background-image: linear-gradient(135deg, #05242a 0%, #050b0f 48%, #2a1b05 100%) !important;
+  background-image:
+    linear-gradient(160deg, #04161c 0%, #050b0f 44%, #151108 100%),
+    radial-gradient(110% 70% at 12% -8%, rgba(18, 164, 190, 0.14) 0%, rgba(18, 164, 190, 0) 56%),
+    radial-gradient(90% 65% at 92% -10%, rgba(170, 115, 24, 0.12) 0%, rgba(170, 115, 24, 0) 58%) !important;
   background-attachment: scroll !important;
 }
 
@@ -54,9 +57,7 @@
 .webview-safe .decorative-glow,
 .webview-safe .background-orb,
 .webview-safe .mesh-gradient,
-.webview-safe .noise-overlay,
-.webview-safe [class*='blur-['],
-.webview-safe [style*='blur('] {
+.webview-safe .noise-overlay {
   display: none !important;
 }
 
@@ -64,8 +65,14 @@
 .webview-safe footer,
 .webview-safe #mobile-main-menu,
 .webview-safe .mobile-menu {
-  background: rgba(5, 11, 15, 0.96) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(6, 13, 18, 0.96) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.webview-safe header {
+  position: sticky;
+  top: 0;
+  z-index: 120 !important;
 }
 
 .webview-safe [data-glass='true'],
@@ -76,10 +83,16 @@
 }
 
 .webview-safe [data-cta='primary'] {
-  background: linear-gradient(135deg, #12d6f3, #05a9c7) !important;
+  background: linear-gradient(135deg, #1adfff 0%, #08b7da 52%, #0498bb 100%) !important;
   color: #ffffff !important;
-  border-color: rgba(18, 214, 243, 0.42) !important;
-  box-shadow: 0 12px 30px rgba(18, 214, 243, 0.24) !important;
+  border-color: rgba(26, 223, 255, 0.5) !important;
+  box-shadow: 0 12px 30px rgba(8, 183, 218, 0.32) !important;
+}
+
+.webview-safe [data-cta='primary']:hover,
+.webview-safe [data-cta='primary']:focus-visible {
+  background: linear-gradient(135deg, #35e5ff 0%, #11c3e6 52%, #06a7ca 100%) !important;
+  box-shadow: 0 14px 34px rgba(9, 195, 230, 0.36) !important;
 }
 @media (max-width: 768px) {
   .app-shell .background-glows {
