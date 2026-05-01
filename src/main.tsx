@@ -9,22 +9,56 @@ type TelegramWindow = Window & {
   };
 };
 
+const getBooleanParamFromSearchOrHash = (name: string) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  if (searchParams.get(name) === '1') return true;
+
+  const rawHash = window.location.hash.replace(/^#/, '');
+  const normalizedHash = rawHash.startsWith('?') ? rawHash.slice(1) : rawHash;
+  const hashParams = new URLSearchParams(normalizedHash);
+
+  return hashParams.get(name) === '1';
+};
+
 const detectWebViewSafeMode = () => {
   const ua = navigator.userAgent.toLowerCase();
   const win = window as TelegramWindow;
-  const isTelegramWebView = ua.includes('telegram') || Boolean(win.Telegram?.WebApp);
-  const isMobile = /iphone|ipad|android/.test(ua);
-  const isLikelyMobileWebView = isMobile && (ua.includes(' wv') || ua.includes('; wv') || ua.includes('version/') || ua.includes('telegram'));
 
-  const params = new URLSearchParams(window.location.search);
-  const forceWebViewSafe = params.get('webviewSafe') === '1';
+  const forceWebViewSafe =
+    getBooleanParamFromSearchOrHash('webviewSafe') ||
+    getBooleanParamFromSearchOrHash('webviewsafe') ||
+    getBooleanParamFromSearchOrHash('safe');
+
+  const isTelegramWebView = ua.includes('telegram') || Boolean(win.Telegram?.WebApp);
+
+  const isAndroidWebView =
+    /android/.test(ua) &&
+    (ua.includes('; wv') || ua.includes(' wv') || ua.includes('version/4.0') || ua.includes('version/'));
+
+  const isIOSWebView = /iphone|ipad|ipod/.test(ua) && !ua.includes('safari');
+  const isLikelyInAppBrowser = /instagram|fbav|fb_iab|vk|okapp|whatsapp|telegram/.test(ua);
+
+  const isLikelyMobileWebView =
+    /iphone|ipad|ipod|android/.test(ua) && (isAndroidWebView || isIOSWebView || isLikelyInAppBrowser);
+
   const isWebViewSafe = forceWebViewSafe || isTelegramWebView || isLikelyMobileWebView;
 
   if (isWebViewSafe) {
     document.documentElement.classList.add('webview-safe');
-    if (import.meta.env.DEV) {
-      console.info('WebView safe mode enabled');
-    }
+  }
+
+  if (import.meta.env.DEV) {
+    console.info('[webview-safe]', {
+      enabled: isWebViewSafe,
+      forced: forceWebViewSafe,
+      telegram: isTelegramWebView,
+      androidWebView: isAndroidWebView,
+      iosWebView: isIOSWebView,
+      inAppBrowser: isLikelyInAppBrowser,
+      mobileWebView: isLikelyMobileWebView,
+      userAgent: navigator.userAgent,
+      className: document.documentElement.className,
+    });
   }
 };
 
