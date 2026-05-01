@@ -83,10 +83,10 @@ export default function App() {
             </p>
 
             <div className="flex gap-4">
-              <a href="#contacts" className="hidden md:inline-flex px-6 py-3 bg-cyan-500 hover:bg-cyan-400 rounded-2xl transition-all shadow-lg shadow-cyan-500/20 text-sm">
+              <a href="#contacts" className="cta-button hidden md:inline-flex px-6 py-3 bg-cyan-500 hover:bg-cyan-400 rounded-2xl transition-all shadow-lg shadow-cyan-500/20 text-sm">
                 Обсудить задачу
               </a>
-              <a href="#cases" className="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all text-sm">
+              <a href="#cases" className="cta-button px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all text-sm">
                 Смотреть кейсы
               </a>
             </div>
@@ -112,7 +112,7 @@ export default function App() {
           <div className="hidden md:grid grid-cols-3 gap-4">
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative p-5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
+              <div data-glass="true" className="relative p-5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
                 <div className="text-xs text-white/50 mb-2">Метрики</div>
                 <div className="text-2xl mb-1.5">
                   <span className="text-white/70">-3%</span>
@@ -125,7 +125,7 @@ export default function App() {
 
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative p-5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
+              <div data-glass="true" className="relative p-5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
                 <div className="text-xs text-white/50 mb-2">Метрики</div>
                 <div className="text-2xl mb-1.5">
                   <span className="text-white/70">4 SKU</span>
@@ -138,7 +138,7 @@ export default function App() {
 
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative p-5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
+              <div data-glass="true" className="relative p-5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
                 <div className="text-xs text-white/50 mb-2">Метрики</div>
                 <div className="text-2xl mb-1.5">
                   <span className="text-white/70">5.52</span>
@@ -155,7 +155,7 @@ export default function App() {
             <div className="flex gap-3">
               {/* Cards column */}
               <div className="flex-1 space-y-3 relative z-10">
-                <div className="relative p-3 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-xl">
+                <div data-glass="true" className="relative p-3 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-xl">
                   <div className="text-[10px] text-white/50 mb-1">Метрики</div>
                   <div className="text-sm mb-0.5">
                     <span className="text-white/70">-3%</span>
@@ -165,7 +165,7 @@ export default function App() {
                   <div className="text-[10px] text-white/50">рентабельность</div>
                 </div>
 
-                <div className="relative p-3 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-xl">
+                <div data-glass="true" className="relative p-3 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-xl">
                   <div className="text-[10px] text-white/50 mb-1">Метрики</div>
                   <div className="text-sm mb-0.5">
                     <span className="text-white/70">4 SKU</span>
@@ -175,7 +175,7 @@ export default function App() {
                   <div className="text-[10px] text-white/50">оборот магазина</div>
                 </div>
 
-                <div className="relative p-3 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-xl">
+                <div data-glass="true" className="relative p-3 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-xl">
                   <div className="text-[10px] text-white/50 mb-1">Метрики</div>
                   <div className="text-sm mb-0.5">
                     <span className="text-white/70">5.52</span>
@@ -226,7 +226,7 @@ export default function App() {
           {/* What I DON'T do & What I DO */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
             {/* I DON'T do */}
-            <div className="p-5 md:p-8 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl md:rounded-3xl">
+            <div data-glass="true" className="p-5 md:p-8 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl md:rounded-3xl">
               <h3 className="text-base md:text-xl mb-4 md:mb-6 text-white/90">Что я не продаю</h3>
               <ul className="space-y-3 md:space-y-4">
                 <li className="flex items-start gap-2 md:gap-3">
@@ -245,7 +245,7 @@ export default function App() {
             </div>
 
             {/* I DO */}
-            <div className="p-5 md:p-8 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl md:rounded-3xl">
+            <div data-glass="true" className="p-5 md:p-8 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl md:rounded-3xl">
               <h3 className="text-base md:text-xl mb-4 md:mb-6 text-white/90">Что я делаю</h3>
               <ul className="space-y-3 md:space-y-4">
                 <li className="flex items-start gap-2 md:gap-3">
@@ -481,7 +481,7 @@ export default function App() {
 
             {/* Right Content - Desktop 3 Columns */}
             <div className="hidden lg:block lg:col-span-9">
-              <div className="h-full p-8 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-3xl flex items-stretch">
+              <div data-glass="true" className="h-full p-8 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-3xl flex items-stretch">
                 <div className="grid grid-cols-3 gap-0 divide-x divide-white/5 flex-1">
                   {/* What I Check */}
                   <div className="px-6">
@@ -564,7 +564,7 @@ export default function App() {
           </div>
 
           {/* Service Type Toggle */}
-          <div className="inline-flex p-1 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] border border-white/10 rounded-2xl">
+          <div data-glass="true" className="inline-flex p-1 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] border border-white/10 rounded-2xl">
             <button
               onClick={() => {
                 setServiceType('onetime');
@@ -628,7 +628,7 @@ export default function App() {
 
             {/* Right Content */}
             <div className="lg:col-span-8">
-              <div className="p-4 md:p-6 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl md:rounded-3xl">
+              <div data-glass="true" className="p-4 md:p-6 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl md:rounded-3xl">
                 {(() => {
                   const currentService = serviceType === 'onetime'
                     ? oneTimeServices.find(s => s.id === selectedService)
@@ -755,7 +755,7 @@ export default function App() {
             </div>
 
             {/* Active Step Content */}
-            <div className="min-h-[300px] md:min-h-[400px] p-4 md:p-8 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl md:rounded-3xl">
+            <div data-glass="true" className="min-h-[300px] md:min-h-[400px] p-4 md:p-8 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl md:rounded-3xl">
               {(() => {
                 const step = processSteps.find(s => s.number === activeProcessStep);
                 if (!step) return null;
@@ -821,7 +821,7 @@ export default function App() {
                     key={idx}
                     className="w-full flex-shrink-0 px-2 md:px-4"
                   >
-                    <div className="max-w-2xl mx-auto p-4 md:p-6 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl md:rounded-3xl">
+                    <div data-glass="true" className="max-w-2xl mx-auto p-4 md:p-6 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl md:rounded-3xl">
                       {/* Logo and Company Name */}
                       <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
                         <img
@@ -1052,13 +1052,13 @@ export default function App() {
                 return (
                   <div className="space-y-3 md:space-y-4">
                     {/* Title and Description */}
-                    <div className="p-3 md:p-4 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-xl md:rounded-2xl">
+                    <div data-glass="true" className="p-3 md:p-4 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-xl md:rounded-2xl">
                       <h3 className="text-base md:text-xl mb-1.5 md:mb-2">{activeData.title}</h3>
                       <p className="text-xs md:text-sm text-white/60 leading-relaxed">{activeData.description}</p>
                     </div>
 
                     {/* Mock Table */}
-                    <div className="p-3 md:p-5 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-xl md:rounded-2xl overflow-x-auto">
+                    <div data-glass="true" className="p-3 md:p-5 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-xl md:rounded-2xl overflow-x-auto">
                       <table className="w-full text-[10px] md:text-xs">
                         <thead>
                           <tr className="border-b border-white/5">

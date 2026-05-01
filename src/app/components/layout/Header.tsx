@@ -83,7 +83,7 @@ export default function Header({ currentPage }: HeaderProps) {
         </div>
 
         <div className="hidden md:flex items-center shrink-0">
-          <a href="/#contacts" className="px-5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm transition-all whitespace-nowrap">
+          <a href="/#contacts" className="cta-button px-5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm transition-all whitespace-nowrap">
             Связаться
           </a>
         </div>

@@ -16,8 +16,13 @@ const detectWebViewSafeMode = () => {
   const isMobile = /iphone|ipad|android/.test(ua);
   const isLikelyMobileWebView = isMobile && (ua.includes(' wv') || ua.includes('; wv') || ua.includes('version/') || ua.includes('telegram'));
 
-  if (isTelegramWebView || isLikelyMobileWebView) {
+  const isWebViewSafe = isTelegramWebView || isLikelyMobileWebView;
+
+  if (isWebViewSafe) {
     document.documentElement.classList.add('webview-safe');
+    if (import.meta.env.DEV) {
+      console.info('WebView safe mode enabled');
+    }
   }
 };
 

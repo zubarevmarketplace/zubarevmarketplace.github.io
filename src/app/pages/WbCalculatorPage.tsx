@@ -184,7 +184,7 @@ export default function WbCalculatorPage() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-          <div className="xl:col-span-6 p-5 md:p-6 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] border border-white/10 rounded-3xl space-y-3">
+          <div data-glass="true" className="xl:col-span-6 p-5 md:p-6 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] border border-white/10 rounded-3xl space-y-3">
             {!isAdvanced && (
               <Field
                 label="Категория товара"
@@ -997,7 +997,7 @@ function Segmented({
     options.findIndex((o) => o[0] === value),
   );
   return (
-    <div className="relative inline-grid grid-cols-2 p-1 rounded-xl border border-white/10 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] transition-all duration-200 hover:border-cyan-400/35 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.14),0_10px_26px_rgba(6,182,212,0.08)]">
+    <div data-glass="true" className="relative inline-grid grid-cols-2 p-1 rounded-xl border border-white/10 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] transition-all duration-200 hover:border-cyan-400/35 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.14),0_10px_26px_rgba(6,182,212,0.08)]">
       <div
         className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-cyan-500/20 border border-cyan-400/30 transition-transform duration-300 ${i === 1 ? "translate-x-full" : ""}`}
       />
