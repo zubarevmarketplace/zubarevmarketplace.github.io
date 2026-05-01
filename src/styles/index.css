@@ -28,3 +28,57 @@
       linear-gradient(180deg, #050b0f 0%, #060d12 45%, #050a0f 100%);
   }
 }
+
+/* Force-safe rendering mode for Telegram/mobile WebView */
+.webview-safe body,
+.webview-safe .app-shell,
+.webview-safe .webview-safe-bg {
+  background-color: #050b0f !important;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(0, 188, 212, 0.16), transparent 32%),
+    radial-gradient(circle at 90% 0%, rgba(157, 104, 18, 0.14), transparent 34%),
+    linear-gradient(180deg, #050b0f 0%, #071016 100%) !important;
+}
+
+.webview-safe * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  mix-blend-mode: normal !important;
+}
+
+.webview-safe .background-glows,
+.webview-safe .background-glows * {
+  display: none !important;
+}
+
+.webview-safe header,
+.webview-safe footer,
+.webview-safe [id='mobile-main-menu'] {
+  background: rgba(8, 18, 24, 0.94) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.webview-safe .app-shell .rounded-3xl,
+.webview-safe .app-shell .rounded-2xl,
+.webview-safe .app-shell .rounded-xl {
+  background-color: rgba(8, 18, 24, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.11) !important;
+}
+
+@media (max-width: 768px) {
+  .app-shell .background-glows {
+    opacity: 0.45;
+  }
+
+  .app-shell [class*='backdrop-blur'] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .app-shell .rounded-3xl,
+  .app-shell .rounded-2xl,
+  .app-shell .rounded-xl {
+    background-color: rgba(8, 18, 24, 0.82);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}

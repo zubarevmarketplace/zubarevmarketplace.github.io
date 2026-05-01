@@ -55,7 +55,7 @@ export default function App() {
       `}</style>
 
       {/* Background gradient glows */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none background-glows">
         <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-cyan-500/30 rounded-full blur-[150px]" />
         <div className="absolute top-0 -right-1/4 w-1/2 h-1/2 bg-amber-500/30 rounded-full blur-[150px]" />
         <div className="absolute top-1/3 left-1/4 w-1/3 h-1/3 bg-purple-500/25 rounded-full blur-[120px]" />
