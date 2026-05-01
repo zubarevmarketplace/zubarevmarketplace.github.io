@@ -20,7 +20,7 @@ export default function Header({ currentPage }: HeaderProps) {
       <header className="relative z-50 border-b border-white/5">
         <nav className="max-w-[1400px] mx-auto px-5 md:px-8 lg:px-10 h-24 flex items-center justify-between gap-6">
           <a href="/" className="flex items-center shrink-0" aria-label="На главную">
-            <img src="/logo.svg" alt="Zubarev Lab" className="w-12 h-12 md:w-14 md:h-14" />
+            <img src="/logo.svg" alt="Zubarev Lab" className="w-[58px] h-[58px] md:w-[67px] md:h-[67px]" />
           </a>
 
           <div className="hidden md:flex flex-1 items-center justify-center gap-8 lg:gap-10 xl:gap-12 min-w-0">
