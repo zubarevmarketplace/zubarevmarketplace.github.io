@@ -1,15 +1,11 @@
 {
-  "name": "Николай Зубарев – аналитика маркетплейсов",
-  "short_name": "zubarevlab",
-  "icons": [
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
-  ],
+  "name": "Zubarev Lab",
+  "short_name": "Zubarev Lab",
+  "description": "Инструменты и услуги для продавцов Wildberries и Ozon",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#050A0E",
-  "theme_color": "#050A0E"
+  "background_color": "#050b0f",
+  "theme_color": "#050b0f",
+  "icons": []
 }
