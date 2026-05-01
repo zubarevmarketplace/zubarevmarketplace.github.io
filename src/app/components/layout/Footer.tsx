@@ -21,6 +21,7 @@ export default function Footer() {
               <li><a href="/#formats" className="hover:text-white/90 transition-colors">Услуги</a></li>
               <li><a href="/#cases" className="hover:text-white/90 transition-colors">Кейсы</a></li>
               <li><a href="/#contacts" className="hover:text-white/90 transition-colors">Контакты</a></li>
+              <li><a href="/privacy.html" className="hover:text-white/90 transition-colors">Политика конфиденциальности</a></li>
             </ul>
           </div>
 
