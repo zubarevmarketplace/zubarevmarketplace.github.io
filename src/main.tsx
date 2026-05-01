@@ -29,6 +29,10 @@ const detectWebViewSafeMode = () => {
     getBooleanParamFromSearchOrHash('webviewsafe') ||
     getBooleanParamFromSearchOrHash('safe');
 
+  const isMobileDevice =
+    /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent) ||
+    window.matchMedia('(max-width: 768px)').matches;
+
   const isTelegramWebView = ua.includes('telegram') || Boolean(win.Telegram?.WebApp);
 
   const isAndroidWebView =
@@ -39,18 +43,20 @@ const detectWebViewSafeMode = () => {
   const isLikelyInAppBrowser = /instagram|fbav|fb_iab|vk|okapp|whatsapp|telegram/.test(ua);
 
   const isLikelyMobileWebView =
-    /iphone|ipad|ipod|android/.test(ua) && (isAndroidWebView || isIOSWebView || isLikelyInAppBrowser);
+    isMobileDevice && (isAndroidWebView || isIOSWebView || isLikelyInAppBrowser);
 
-  const isWebViewSafe = forceWebViewSafe || isTelegramWebView || isLikelyMobileWebView;
+  const isWebViewSafe = forceWebViewSafe || isTelegramWebView || isLikelyMobileWebView || isMobileDevice;
 
   if (isWebViewSafe) {
     document.documentElement.classList.add('webview-safe');
+    document.documentElement.dataset.webviewSafe = 'true';
   }
 
   if (import.meta.env.DEV) {
     console.info('[webview-safe]', {
       enabled: isWebViewSafe,
       forced: forceWebViewSafe,
+      mobile: isMobileDevice,
       telegram: isTelegramWebView,
       androidWebView: isAndroidWebView,
       iosWebView: isIOSWebView,
