@@ -1,5 +1,6 @@
 import { Menu, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import SiteLogo from './SiteLogo';
 
 type HeaderProps = {
   currentPage: 'home' | 'calculator';
@@ -61,10 +62,10 @@ export default function Header({ currentPage }: HeaderProps) {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-[100] border-b border-white/10 bg-[#050A0E]/95 backdrop-blur-md supports-[backdrop-filter]:bg-[#050A0E]/85">
+    <header className="sticky top-0 z-[100] border-b border-white/10 bg-[linear-gradient(90deg,rgba(0,45,55,0.45),rgba(5,10,14,0.9),rgba(65,42,5,0.38))] backdrop-blur-[18px] supports-[backdrop-filter]:bg-[linear-gradient(90deg,rgba(0,45,55,0.42),rgba(5,10,14,0.82),rgba(65,42,5,0.34))]">
       <nav className="max-w-[1400px] mx-auto px-5 md:px-8 lg:px-10 h-20 md:h-24 flex items-center justify-between gap-6 overflow-x-clip">
         <a href="/" className="flex items-center shrink-0" aria-label="На главную">
-          <img src="/logo.svg" alt="Zubarev Lab" className="w-[58px] h-[58px] md:w-[67px] md:h-[67px]" />
+          <SiteLogo className="w-[58px] h-[58px] md:w-[67px] md:h-[67px]" />
         </a>
 
         <div className="hidden md:flex flex-1 items-center justify-center gap-8 lg:gap-10 xl:gap-12 min-w-0">
@@ -101,7 +102,7 @@ export default function Header({ currentPage }: HeaderProps) {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 z-[110] border-b border-white/10 bg-[#050A0E]/98 backdrop-blur-md">
+        <div className="md:hidden absolute top-full left-0 right-0 z-[110] border-b border-white/10 bg-[linear-gradient(180deg,rgba(7,13,18,0.97),rgba(5,10,14,0.94))] backdrop-blur-[16px]">
           <div ref={mobileMenuRef} id="mobile-main-menu" className="max-w-[1400px] mx-auto px-5 py-5 space-y-3">
             {landingLinks.map((link) => (
               <a

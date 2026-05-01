@@ -1,4 +1,5 @@
 import { Mail, Phone, Send } from 'lucide-react';
+import SiteLogo from './SiteLogo';
 
 export default function Footer() {
   return (
@@ -6,7 +7,7 @@ export default function Footer() {
       <div className="max-w-[1400px] mx-auto px-8 py-8 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 mb-8 md:mb-12">
           <div className="md:col-span-3">
-            <img src="/favicon.svg" alt="Zubarev Lab" className="w-20 h-20 mb-4" />
+            <SiteLogo className="w-20 h-20 mb-4" />
             <p className="text-sm text-white/60 leading-relaxed">
               Аудит, аналитика и консультационное сопровождение для продавцов на Wildberries и Ozon.
             </p>
