@@ -1,4 +1,3 @@
-import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import { useState, Fragment } from 'react';
 import Layout from './components/layout/Layout';
 import Seo from './components/Seo';

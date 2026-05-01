@@ -779,7 +779,7 @@ function AutocompleteSelect({ value, onChange, options, placeholder }: { value: 
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setDebouncedSearch(query);
-    }, 200);
+    }, 250);
     return () => window.clearTimeout(timer);
   }, [query]);
   useEffect(() => {
@@ -1038,19 +1038,31 @@ function AnimatedNumber({
   const [d, setD] = useState(value);
   const prev = useRef(value);
   useEffect(() => {
-    const s = prev.current,
-      e = value,
-      st = performance.now(),
-      dur = 420;
+    const s = prev.current;
+    const e = value;
+    if (s === e) {
+      setD(e);
+      return;
+    }
+
+    const st = performance.now();
+    const dur = 420;
     let raf = 0;
+
     const tick = (t: number) => {
       const p = Math.min((t - st) / dur, 1);
       setD(s + (e - s) * (1 - Math.pow(1 - p, 3)));
-      if (p < 1) raf = requestAnimationFrame(tick);
+      if (p < 1) {
+        raf = requestAnimationFrame(tick);
+      }
     };
+
     raf = requestAnimationFrame(tick);
     prev.current = e;
-    return () => cancelAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(raf);
+    };
   }, [value]);
   return <>{type === "currency" ? formatCurrency(d) : formatPercent(d)}</>;
 }
