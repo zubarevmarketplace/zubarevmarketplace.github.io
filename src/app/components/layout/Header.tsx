@@ -83,7 +83,7 @@ export default function Header({ currentPage }: HeaderProps) {
         </div>
 
         <div className="hidden md:flex items-center shrink-0">
-          <a href="/#contacts" className="cta-button px-5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm transition-all whitespace-nowrap">
+          <a href="/#contacts" className="cta-button px-5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm transition-all whitespace-nowrap" data-cta="primary">
             Связаться
           </a>
         </div>
@@ -103,7 +103,7 @@ export default function Header({ currentPage }: HeaderProps) {
 
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 z-[110] border-b border-white/10 bg-[#08131a]/96 supports-[backdrop-filter]:backdrop-blur-[16px] supports-[backdrop-filter]:bg-[linear-gradient(180deg,rgba(7,13,18,0.97),rgba(5,10,14,0.94))]">
-          <div ref={mobileMenuRef} id="mobile-main-menu" className="max-w-[1400px] mx-auto px-5 py-5 space-y-3">
+          <div ref={mobileMenuRef} id="mobile-main-menu" className="max-w-[1400px] mx-auto px-5 py-5 space-y-3 mobile-menu" data-glass="true">
             {landingLinks.map((link) => (
               <a
                 key={link.label}

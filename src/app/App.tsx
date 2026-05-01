@@ -55,7 +55,7 @@ export default function App() {
       `}</style>
 
       {/* Background gradient glows */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none background-glows">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none background-glows" data-decorative="true">
         <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-cyan-500/30 rounded-full blur-[150px]" />
         <div className="absolute top-0 -right-1/4 w-1/2 h-1/2 bg-amber-500/30 rounded-full blur-[150px]" />
         <div className="absolute top-1/3 left-1/4 w-1/3 h-1/3 bg-purple-500/25 rounded-full blur-[120px]" />
@@ -83,7 +83,7 @@ export default function App() {
             </p>
 
             <div className="flex gap-4">
-              <a href="#contacts" className="cta-button hidden md:inline-flex px-6 py-3 bg-cyan-500 hover:bg-cyan-400 rounded-2xl transition-all shadow-lg shadow-cyan-500/20 text-sm">
+              <a href="#contacts" className="cta-button hidden md:inline-flex px-6 py-3 bg-cyan-500 hover:bg-cyan-400 rounded-2xl transition-all shadow-lg shadow-cyan-500/20 text-sm" data-cta="primary">
                 Обсудить задачу
               </a>
               <a href="#cases" className="cta-button px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all text-sm">
@@ -266,7 +266,7 @@ export default function App() {
 
           {/* Principles Cards - compact layout */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-            <div className="p-4 md:p-5 bg-gradient-to-br from-cyan-500/5 to-transparent backdrop-blur-sm border border-white/10 rounded-xl md:rounded-2xl hover:border-cyan-500/30 transition-all group">
+            <div data-glass="true" className="p-4 md:p-5 bg-gradient-to-br from-cyan-500/5 to-transparent backdrop-blur-sm border border-white/10 rounded-xl md:rounded-2xl hover:border-cyan-500/30 transition-all group">
               <div className="w-8 h-8 md:w-10 md:h-10 mb-3 md:mb-4 rounded-lg md:rounded-xl bg-cyan-500/10 flex items-center justify-center group-hover:bg-cyan-500/20 transition-all">
                 <span className="text-lg md:text-xl">🔍</span>
               </div>
@@ -276,7 +276,7 @@ export default function App() {
               </p>
             </div>
 
-            <div className="p-4 md:p-5 bg-gradient-to-br from-amber-500/5 to-transparent backdrop-blur-sm border border-white/10 rounded-xl md:rounded-2xl hover:border-amber-500/30 transition-all group">
+            <div data-glass="true" className="p-4 md:p-5 bg-gradient-to-br from-amber-500/5 to-transparent backdrop-blur-sm border border-white/10 rounded-xl md:rounded-2xl hover:border-amber-500/30 transition-all group">
               <div className="w-8 h-8 md:w-10 md:h-10 mb-3 md:mb-4 rounded-lg md:rounded-xl bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-all">
                 <span className="text-lg md:text-xl">📊</span>
               </div>
@@ -286,7 +286,7 @@ export default function App() {
               </p>
             </div>
 
-            <div className="p-4 md:p-5 bg-gradient-to-br from-purple-500/5 to-transparent backdrop-blur-sm border border-white/10 rounded-xl md:rounded-2xl hover:border-purple-500/30 transition-all group">
+            <div data-glass="true" className="p-4 md:p-5 bg-gradient-to-br from-purple-500/5 to-transparent backdrop-blur-sm border border-white/10 rounded-xl md:rounded-2xl hover:border-purple-500/30 transition-all group">
               <div className="w-8 h-8 md:w-10 md:h-10 mb-3 md:mb-4 rounded-lg md:rounded-xl bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-all">
                 <span className="text-lg md:text-xl">🎯</span>
               </div>
@@ -296,7 +296,7 @@ export default function App() {
               </p>
             </div>
 
-            <div className="p-4 md:p-5 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 backdrop-blur-sm border border-white/10 rounded-xl md:rounded-2xl hover:border-white/20 transition-all group">
+            <div data-glass="true" className="p-4 md:p-5 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 backdrop-blur-sm border border-white/10 rounded-xl md:rounded-2xl hover:border-white/20 transition-all group">
               <div className="w-8 h-8 md:w-10 md:h-10 mb-3 md:mb-4 rounded-lg md:rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-white/15 transition-all">
                 <span className="text-lg md:text-xl">🎁</span>
               </div>
@@ -1096,7 +1096,7 @@ export default function App() {
               {analyticsInsights.map((insight, idx) => (
                 <div
                   key={idx}
-                  className="p-3 md:p-4 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-xl md:rounded-2xl hover:border-white/10 transition-all"
+                  data-glass="true" className="p-3 md:p-4 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-xl md:rounded-2xl hover:border-white/10 transition-all"
                 >
                   <div className="flex items-start gap-2 md:gap-3">
                     <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
@@ -1146,7 +1146,7 @@ export default function App() {
               {aboutFacts.map((fact, idx) => (
                 <div
                   key={idx}
-                  className="p-4 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl hover:border-white/10 transition-all"
+                  data-glass="true" className="p-4 bg-white/[0.02] backdrop-blur-sm border border-white/5 rounded-2xl hover:border-white/10 transition-all"
                 >
                   <div className="w-8 h-8 mb-3 rounded-lg bg-cyan-500/10 flex items-center justify-center">
                     <span className="text-cyan-400 text-sm">{fact.icon}</span>
@@ -1162,7 +1162,7 @@ export default function App() {
                 const contactsSection = document.getElementById('contacts');
                 contactsSection?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="inline-flex px-8 py-3 bg-cyan-500 hover:bg-cyan-400 rounded-2xl transition-all shadow-lg shadow-cyan-500/20 text-sm"
+              className="inline-flex px-8 py-3 bg-cyan-500 hover:bg-cyan-400 rounded-2xl transition-all shadow-lg shadow-cyan-500/20 text-sm" data-cta="primary"
             >
               Обсудить задачу
             </button>
@@ -1225,7 +1225,7 @@ export default function App() {
               {aboutFacts.map((fact, idx) => (
                 <div
                   key={idx}
-                  className={`p-2.5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl hover:border-white/20 transition-all ${
+                  data-glass="true" className={`p-2.5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl hover:border-white/20 transition-all ${
                     idx === 0 ? 'ml-8' : idx === 1 || idx === 2 ? 'ml-4' : 'ml-8'
                   }`}
                   style={{
@@ -1271,7 +1271,7 @@ export default function App() {
             {faqData.map((faq, idx) => (
               <div
                 key={idx}
-                className={`p-4 bg-white/[0.02] backdrop-blur-sm border rounded-2xl transition-all cursor-pointer ${
+                data-glass="true" className={`p-4 bg-white/[0.02] backdrop-blur-sm border rounded-2xl transition-all cursor-pointer ${
                   openFaqIndex === idx
                     ? 'border-cyan-500/30 bg-cyan-500/5'
                     : 'border-white/5 hover:border-white/10'

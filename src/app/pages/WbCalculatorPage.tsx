@@ -159,7 +159,7 @@ export default function WbCalculatorPage() {
         canonical="https://zubarevlab.ru/tools/wb-calculator"
         ogUrl="https://zubarevlab.ru/tools/wb-calculator"
       />
-      <div className="fixed inset-0 pointer-events-none background-glows">
+      <div className="fixed inset-0 pointer-events-none background-glows" data-decorative="true">
         <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-cyan-500/25 rounded-full blur-[150px]" />
         <div className="absolute top-0 -right-1/4 w-1/2 h-1/2 bg-amber-500/20 rounded-full blur-[150px]" />
       </div>

@@ -3,7 +3,7 @@ import SiteLogo from './SiteLogo';
 
 export default function Footer() {
   return (
-    <footer className="relative z-10 border-t border-white/5 bg-[#09131b]/85 supports-[backdrop-filter]:bg-white/[0.04]">
+    <footer data-glass="true" className="relative z-10 border-t border-white/5 bg-[#09131b]/85 supports-[backdrop-filter]:bg-white/[0.04]">
       <div className="max-w-[1400px] mx-auto px-8 py-8 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 mb-8 md:mb-12">
           <div className="md:col-span-3">
