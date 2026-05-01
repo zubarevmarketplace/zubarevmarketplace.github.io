@@ -1,3 +1,106 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: #050b0f;
+    background-image:
+      radial-gradient(120% 80% at 8% -10%, rgba(18, 104, 125, 0.35) 0%, rgba(18, 104, 125, 0) 55%),
+      radial-gradient(90% 70% at 92% -10%, rgba(138, 93, 24, 0.26) 0%, rgba(138, 93, 24, 0) 58%),
+      linear-gradient(180deg, #050b0f 0%, #060d12 45%, #050a0f 100%);
+    background-attachment: fixed;
+  }
+}
+
+.webview-safe-bg {
+  background-color: #050b0f;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .webview-safe-bg {
+    background-image:
+      radial-gradient(120% 80% at 8% -10%, rgba(18, 104, 125, 0.3) 0%, rgba(18, 104, 125, 0) 55%),
+      linear-gradient(180deg, #050b0f 0%, #060d12 45%, #050a0f 100%);
+  }
+}
+
+/* Force-safe rendering mode for Telegram/mobile WebView */
+.webview-safe,
+.webview-safe body,
+.webview-safe #root,
+.webview-safe .app-shell,
+.webview-safe .webview-safe-bg {
+  background-color: #050b0f !important;
+  background-image:
+    linear-gradient(160deg, #04161c 0%, #050b0f 44%, #151108 100%),
+    radial-gradient(110% 70% at 12% -8%, rgba(18, 164, 190, 0.14) 0%, rgba(18, 164, 190, 0) 56%),
+    radial-gradient(90% 65% at 92% -10%, rgba(170, 115, 24, 0.12) 0%, rgba(170, 115, 24, 0) 58%) !important;
+  background-attachment: scroll !important;
+}
+
+.webview-safe *,
+.webview-safe *::before,
+.webview-safe *::after {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  mix-blend-mode: normal !important;
+  filter: none !important;
+}
+
+.webview-safe .background-glows,
+.webview-safe [data-decorative='true'],
+.webview-safe .decorative-glow,
+.webview-safe .background-orb,
+.webview-safe .mesh-gradient,
+.webview-safe .noise-overlay {
+  display: none !important;
+}
+
+.webview-safe header,
+.webview-safe footer,
+.webview-safe #mobile-main-menu,
+.webview-safe .mobile-menu {
+  background: rgba(6, 13, 18, 0.96) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.webview-safe header {
+  position: sticky;
+  top: 0;
+  z-index: 120 !important;
+}
+
+.webview-safe [data-glass='true'],
+.webview-safe .glass-panel {
+  background: rgba(8, 18, 24, 0.94) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.42) !important;
+}
+
+.webview-safe [data-cta='primary'] {
+  background: linear-gradient(135deg, #1adfff 0%, #08b7da 52%, #0498bb 100%) !important;
+  color: #ffffff !important;
+  border-color: rgba(26, 223, 255, 0.5) !important;
+  box-shadow: 0 12px 30px rgba(8, 183, 218, 0.32) !important;
+}
+
+.webview-safe [data-cta='primary']:hover,
+.webview-safe [data-cta='primary']:focus-visible {
+  background: linear-gradient(135deg, #35e5ff 0%, #11c3e6 52%, #06a7ca 100%) !important;
+  box-shadow: 0 14px 34px rgba(9, 195, 230, 0.36) !important;
+}
+@media (max-width: 768px) {
+  .app-shell .background-glows {
+    opacity: 0.3;
+  }
+
+  .app-shell [data-glass='true'] {
+    background: rgba(8, 18, 24, 0.86);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}

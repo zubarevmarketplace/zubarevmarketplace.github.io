@@ -9,7 +9,7 @@ type LayoutProps = {
 
 export default function Layout({ children, currentPage }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-[#050A0E] text-white overflow-x-hidden flex flex-col">
+    <div className="min-h-screen bg-[#050b0f] text-white overflow-x-hidden flex flex-col webview-safe-bg app-shell">
       <Header currentPage={currentPage} />
       <main className="flex-1">{children}</main>
       <Footer />
