@@ -1,3 +1,30 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: #050b0f;
+    background-image:
+      radial-gradient(120% 80% at 8% -10%, rgba(18, 104, 125, 0.35) 0%, rgba(18, 104, 125, 0) 55%),
+      radial-gradient(90% 70% at 92% -10%, rgba(138, 93, 24, 0.26) 0%, rgba(138, 93, 24, 0) 58%),
+      linear-gradient(180deg, #050b0f 0%, #060d12 45%, #050a0f 100%);
+    background-attachment: fixed;
+  }
+}
+
+.webview-safe-bg {
+  background-color: #050b0f;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .webview-safe-bg {
+    background-image:
+      radial-gradient(120% 80% at 8% -10%, rgba(18, 104, 125, 0.3) 0%, rgba(18, 104, 125, 0) 55%),
+      linear-gradient(180deg, #050b0f 0%, #060d12 45%, #050a0f 100%);
+  }
+}

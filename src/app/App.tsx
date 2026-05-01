@@ -112,7 +112,7 @@ export default function App() {
           <div className="hidden md:grid grid-cols-3 gap-4">
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative p-5 bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
+              <div className="relative p-5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
                 <div className="text-xs text-white/50 mb-2">Метрики</div>
                 <div className="text-2xl mb-1.5">
                   <span className="text-white/70">-3%</span>
@@ -125,7 +125,7 @@ export default function App() {
 
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative p-5 bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
+              <div className="relative p-5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
                 <div className="text-xs text-white/50 mb-2">Метрики</div>
                 <div className="text-2xl mb-1.5">
                   <span className="text-white/70">4 SKU</span>
@@ -138,7 +138,7 @@ export default function App() {
 
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative p-5 bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
+              <div className="relative p-5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 transition-all">
                 <div className="text-xs text-white/50 mb-2">Метрики</div>
                 <div className="text-2xl mb-1.5">
                   <span className="text-white/70">5.52</span>
@@ -155,7 +155,7 @@ export default function App() {
             <div className="flex gap-3">
               {/* Cards column */}
               <div className="flex-1 space-y-3 relative z-10">
-                <div className="relative p-3 bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl">
+                <div className="relative p-3 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-xl">
                   <div className="text-[10px] text-white/50 mb-1">Метрики</div>
                   <div className="text-sm mb-0.5">
                     <span className="text-white/70">-3%</span>
@@ -165,7 +165,7 @@ export default function App() {
                   <div className="text-[10px] text-white/50">рентабельность</div>
                 </div>
 
-                <div className="relative p-3 bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl">
+                <div className="relative p-3 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-xl">
                   <div className="text-[10px] text-white/50 mb-1">Метрики</div>
                   <div className="text-sm mb-0.5">
                     <span className="text-white/70">4 SKU</span>
@@ -175,7 +175,7 @@ export default function App() {
                   <div className="text-[10px] text-white/50">оборот магазина</div>
                 </div>
 
-                <div className="relative p-3 bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl">
+                <div className="relative p-3 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-xl">
                   <div className="text-[10px] text-white/50 mb-1">Метрики</div>
                   <div className="text-sm mb-0.5">
                     <span className="text-white/70">5.52</span>
@@ -564,7 +564,7 @@ export default function App() {
           </div>
 
           {/* Service Type Toggle */}
-          <div className="inline-flex p-1 bg-white/[0.03] border border-white/10 rounded-2xl">
+          <div className="inline-flex p-1 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] border border-white/10 rounded-2xl">
             <button
               onClick={() => {
                 setServiceType('onetime');
@@ -729,7 +729,7 @@ export default function App() {
                         className={`w-12 h-12 md:w-20 md:h-20 rounded-full border-2 transition-all ${
                           activeProcessStep === step.number
                             ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-400 scale-110'
-                            : 'bg-white/[0.03] border-white/10 text-white/60 hover:border-white/20 hover:text-white/80'
+                            : 'bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] border-white/10 text-white/60 hover:border-white/20 hover:text-white/80'
                         }`}
                       >
                         <span className="text-sm md:text-lg">{step.number}</span>
@@ -1225,7 +1225,7 @@ export default function App() {
               {aboutFacts.map((fact, idx) => (
                 <div
                   key={idx}
-                  className={`p-2.5 bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-xl hover:border-white/20 transition-all ${
+                  className={`p-2.5 bg-[#0B141C]/75 supports-[backdrop-filter]:bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl hover:border-white/20 transition-all ${
                     idx === 0 ? 'ml-8' : idx === 1 || idx === 2 ? 'ml-4' : 'ml-8'
                   }`}
                   style={{
