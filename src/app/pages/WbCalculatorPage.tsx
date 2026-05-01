@@ -15,6 +15,7 @@ import type {
   TaxMode,
 } from "../types/calculator";
 import Layout from "../components/layout/Layout";
+import Seo from "../components/Seo";
 
 const initial: CalculatorInput = {
   categoryId: "home",
@@ -150,7 +151,14 @@ export default function WbCalculatorPage() {
   ] as const;
 
   return (
+
     <Layout currentPage="calculator">
+      <Seo
+        title="Калькулятор юнит-экономики Wildberries — бесплатный расчёт прибыли WB"
+        description="Бесплатный калькулятор юнит-экономики Wildberries: рассчитайте прибыль, маржу, ROI, комиссии WB, логистику, хранение, рекламу, налоги и СПП."
+        canonical="https://zubarevlab.ru/tools/wb-calculator"
+        ogUrl="https://zubarevlab.ru/tools/wb-calculator"
+      />
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-cyan-500/25 rounded-full blur-[150px]" />
         <div className="absolute top-0 -right-1/4 w-1/2 h-1/2 bg-amber-500/20 rounded-full blur-[150px]" />

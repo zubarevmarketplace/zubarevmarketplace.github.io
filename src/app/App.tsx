@@ -1,6 +1,7 @@
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import { useState, Fragment } from 'react';
 import Layout from './components/layout/Layout';
+import Seo from './components/Seo';
 import { Send, MessageCircle, Phone, FileText, TrendingUp } from 'lucide-react';
 import carloLogo from '../imports/Carlo_LexOne_(var3).png';
 import phoenixLogo from '../imports/аватарка-Феникс3.png';
@@ -22,7 +23,14 @@ export default function App() {
   const [floatingButtonExpanded, setFloatingButtonExpanded] = useState(false);
   const [mobileDiagnosticTab, setMobileDiagnosticTab] = useState<'check' | 'problems' | 'results'>('check');
   return (
+
     <Layout currentPage="home">
+      <Seo
+        title="Zubarev Lab — инструменты и услуги для продавцов Wildberries"
+        description="Инструменты, аналитика и услуги для продавцов Wildberries: юнит-экономика, логистика, комиссии, прибыль, продвижение и рост продаж."
+        canonical="https://zubarevlab.ru/"
+        ogUrl="https://zubarevlab.ru/"
+      />
       <style>{`
         html {
           scroll-behavior: smooth;

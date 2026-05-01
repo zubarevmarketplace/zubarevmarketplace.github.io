@@ -7,9 +7,6 @@ import './styles/index.css';
 const calculatorPaths = new Set(['/calculator', '/tools/wb-calculator']);
 const isCalculatorRoute = calculatorPaths.has(window.location.pathname);
 
-if (isCalculatorRoute) {
-  document.title = 'WB калькулятор юнит-экономики';
-}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
