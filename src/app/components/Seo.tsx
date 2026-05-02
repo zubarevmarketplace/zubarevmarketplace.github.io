@@ -6,6 +6,7 @@ type SeoProps = {
   canonical: string;
   ogType?: string;
   ogUrl: string;
+  ogImage?: string;
 };
 
 function upsertMetaByName(name: string, content: string) {
@@ -38,7 +39,7 @@ function upsertCanonical(href: string) {
   link.setAttribute('href', href);
 }
 
-export default function Seo({ title, description, canonical, ogType = 'website', ogUrl }: SeoProps) {
+export default function Seo({ title, description, canonical, ogType = 'website', ogUrl, ogImage }: SeoProps) {
   useEffect(() => {
     document.title = title;
     upsertMetaByName('description', description);
@@ -52,7 +53,12 @@ export default function Seo({ title, description, canonical, ogType = 'website',
     upsertMetaByName('twitter:card', 'summary_large_image');
     upsertMetaByName('twitter:title', title);
     upsertMetaByName('twitter:description', description);
-  }, [title, description, canonical, ogType, ogUrl]);
+
+    if (ogImage) {
+      upsertMetaByProperty('og:image', ogImage);
+      upsertMetaByName('twitter:image', ogImage);
+    }
+  }, [title, description, canonical, ogType, ogUrl, ogImage]);
 
   return null;
 }

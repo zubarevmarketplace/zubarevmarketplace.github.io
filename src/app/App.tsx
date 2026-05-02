@@ -29,6 +29,7 @@ export default function App() {
         description="Инструменты, аналитика и услуги для продавцов Wildberries: юнит-экономика, логистика, комиссии, прибыль, продвижение и рост продаж."
         canonical="https://zubarevlab.ru/"
         ogUrl="https://zubarevlab.ru/"
+        ogImage="https://zubarevlab.ru/og-image.jpg"
       />
       <style>{`
         html {

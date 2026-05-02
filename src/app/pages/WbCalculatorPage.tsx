@@ -158,6 +158,7 @@ export default function WbCalculatorPage() {
         description="Бесплатный калькулятор юнит-экономики Wildberries: рассчитайте прибыль, маржу, ROI, комиссии WB, логистику, хранение, рекламу, налоги и СПП."
         canonical="https://zubarevlab.ru/tools/wb-calculator"
         ogUrl="https://zubarevlab.ru/tools/wb-calculator"
+        ogImage="https://zubarevlab.ru/og-wb-calculator.jpg"
       />
       <div className="fixed inset-0 pointer-events-none background-glows" data-decorative="true">
         <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-cyan-500/25 rounded-full blur-[150px]" />
