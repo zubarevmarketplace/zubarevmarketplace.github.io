@@ -71,8 +71,12 @@ const detectWebViewSafeMode = () => {
 detectWebViewSafeMode();
 
 const WbCalculatorPage = React.lazy(() => import('./app/pages/WbCalculatorPage'));
+const normalizePathname = (pathname: string) => {
+  if (!pathname) return '/';
+  return pathname !== '/' && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+};
 const calculatorPaths = new Set(['/calculator', '/tools/wb-calculator']);
-const isCalculatorRoute = calculatorPaths.has(window.location.pathname);
+const isCalculatorRoute = calculatorPaths.has(normalizePathname(window.location.pathname));
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
