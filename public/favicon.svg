@@ -1,18 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="none">
   <style>
     .logo-stroke {
-      stroke: #000;
+      stroke: #000000;
     }
+
     @media (prefers-color-scheme: dark) {
       .logo-stroke {
-        stroke: #fff;
+        stroke: #ffffff;
       }
     }
   </style>
 
-  <g transform="translate(20 20) scale(0.923)">
-    <path d="M402 42H118C76.0264 42 42 76.0264 42 118V402C42 443.974 76.0264 478 118 478H402C443.974 478 478 443.974 478 402V118C478 76.0264 443.974 42 402 42Z" class="logo-stroke" stroke-width="28"/>
-    <path d="M150 160H335L170 360H335" class="logo-stroke" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M380 160V360L250 235" class="logo-stroke" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
+  <path
+    d="M402 42H118C76.0264 42 42 76.0264 42 118V402C42 443.974 76.0264 478 118 478H402C443.974 478 478 443.974 478 402V118C478 76.0264 443.974 42 402 42Z"
+    class="logo-stroke"
+    stroke-width="28"
+  />
+
+  <path
+    d="M150 160H335L170 360H335"
+    class="logo-stroke"
+    stroke-width="28"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <path
+    d="M380 160V360L250 235"
+    class="logo-stroke"
+    stroke-width="28"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
 </svg>
