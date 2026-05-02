@@ -1,11 +1,39 @@
 {
-  "name": "Zubarev Lab",
+  "name": "Zubarev Lab — инструменты для продавцов Wildberries",
   "short_name": "Zubarev Lab",
-  "description": "Инструменты и услуги для продавцов Wildberries и Ozon",
+  "description": "Инструменты, аналитика и услуги для продавцов Wildberries и Ozon",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#050b0f",
   "theme_color": "#050b0f",
-  "icons": []
+  "categories": ["business", "productivity", "finance"],
+  "lang": "ru-RU",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/maskable-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
 }
