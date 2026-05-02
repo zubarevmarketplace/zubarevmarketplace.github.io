@@ -6,7 +6,7 @@ const BASE_URL = `https://${HOST}`;
 const INDEXNOW_ENDPOINT = 'https://api.indexnow.org/indexnow';
 const URL_LIST = [
   `${BASE_URL}/`,
-  `${BASE_URL}/tools/wb-calculator`,
+  `${BASE_URL}/calculator`,
 ];
 
 async function main() {

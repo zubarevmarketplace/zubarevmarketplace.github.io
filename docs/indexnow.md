@@ -15,6 +15,6 @@ npm run submit:indexnow
 Скрипт отправляет в IndexNow обновления для URL:
 
 - `https://zubarevlab.ru/`
-- `https://zubarevlab.ru/tools/wb-calculator`
+- `https://zubarevlab.ru/calculator`
 
 Если `INDEXNOW_KEY` не задан, команда завершится с ошибкой.

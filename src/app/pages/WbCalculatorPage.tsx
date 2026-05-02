@@ -156,8 +156,8 @@ export default function WbCalculatorPage() {
       <Seo
         title="Калькулятор юнит-экономики Wildberries — бесплатный расчёт прибыли WB"
         description="Бесплатный калькулятор юнит-экономики Wildberries: рассчитайте прибыль, маржу, ROI, комиссии WB, логистику, хранение, рекламу, налоги и СПП."
-        canonical="https://zubarevlab.ru/tools/wb-calculator"
-        ogUrl="https://zubarevlab.ru/tools/wb-calculator"
+        canonical="https://zubarevlab.ru/calculator"
+        ogUrl="https://zubarevlab.ru/calculator"
         ogImage="https://zubarevlab.ru/og-wb-calculator.jpg"
       />
       <div className="fixed inset-0 pointer-events-none background-glows" data-decorative="true">
