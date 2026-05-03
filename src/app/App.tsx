@@ -544,6 +544,48 @@ export default function App() {
         </div>
       </section>
 
+      {/* WB Calculator Promo Section */}
+      <section className="relative z-10 px-4 md:px-8 py-8 md:py-12 max-w-[1400px] mx-auto">
+        <div className="relative overflow-hidden rounded-3xl border border-cyan-400/20 bg-[#0B141C]/85 supports-[backdrop-filter]:bg-white/[0.06] p-5 md:p-8">
+          <div className="absolute -top-20 -right-16 w-60 h-60 bg-cyan-500/20 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute -bottom-20 -left-16 w-60 h-60 bg-emerald-500/15 blur-[100px] rounded-full pointer-events-none" />
+
+          <div className="relative grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-center">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-400/25">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span className="text-xs text-emerald-300 tracking-wide">Бесплатно</span>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-2xl md:text-3xl leading-tight">
+                  Бесплатный калькулятор юнит-экономики WB
+                </h3>
+                <p className="text-sm md:text-base text-white/70 leading-relaxed max-w-3xl">
+                  Посчитайте прибыль, маржу, ROI, комиссии, логистику, хранение, рекламу, налоги и СПП перед запуском товара на Wildberries.
+                </p>
+              </div>
+
+              <ul className="flex flex-wrap gap-2.5 text-xs md:text-sm text-white/80">
+                <li className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">FBO/FBS</li>
+                <li className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">СПП и комиссии</li>
+                <li className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">Логистика и выкуп</li>
+              </ul>
+            </div>
+
+            <div className="relative">
+              <a
+                href="/calculator"
+                className="inline-flex items-center justify-center px-6 md:px-7 py-3.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-[#021018] font-medium transition-all shadow-[0_12px_40px_rgba(34,211,238,0.28)] hover:shadow-[0_16px_50px_rgba(34,211,238,0.34)]"
+                data-cta="calculator-promo"
+              >
+                Открыть калькулятор
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Work Formats Section */}
       <section className="relative z-10 px-4 md:px-8 py-12 max-w-[1400px] mx-auto" id="formats">
         <div className="space-y-6">
