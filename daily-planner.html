@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Планировщик дня · ZubarevLab</title>
+  <meta name="description" content="Личный планировщик дня ZubarevLab: задачи из Telegram и Todoist, свободное время в Google Calendar.">
+  <style>
+    :root { color-scheme: dark; font-family: Inter, Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #09131b; color: #eef7fb; line-height: 1.65; }
+    main { max-width: 760px; margin: 0 auto; padding: 72px 24px 96px; }
+    a { color: #80e2ee; }
+    .brand { color: #80e2ee; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: .8rem; }
+    h1 { font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.1; margin: 20px 0 24px; }
+    h2 { margin-top: 42px; font-size: 1.3rem; }
+    p, li { color: #c7d4dc; }
+    .panel { margin-top: 34px; padding: 24px; border: 1px solid #31515e; border-radius: 16px; background: #10232d; }
+    footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid #31515e; font-size: .92rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">ZubarevLab</div>
+    <h1>Планировщик дня</h1>
+    <p>Личный инструмент Николая Зубарева для составления рабочего плана. Он принимает сообщения и команды в Telegram, сопоставляет их с задачами Todoist и учитывает занятость в Google Calendar.</p>
+    <h2>Как работает планирование</h2>
+    <p>Владелец сам сообщает, когда начинает работу, делает перерыв и заканчивает день. Планировщик предлагает следующую задачу, а по запросу создаёт или переносит собственный рабочий блок в основном Google-календаре. Время завершения дня заранее не задаётся.</p>
+    <div class="panel">
+      <strong>Доступ к Google Calendar</strong>
+      <p>Разрешение Google <code>calendar.events</code> технически позволяет просматривать и менять мероприятия во всех календарях аккаунта. Эта версия приложения читает основной календарь и изменяет только созданные ею рабочие блоки. Она не рассылает приглашения.</p>
+      <p>Приложение настроено для личного аккаунта владельца <code>zubarev.marketplace@gmail.com</code>. Вход с другими Google-аккаунтами отклоняется приложением.</p>
+    </div>
+    <footer>
+      <p><a href="/daily-planner-privacy.html">Как используются данные календаря</a> · <a href="/daily-planner-terms.html">Условия использования</a> · <a href="/">Основной сайт ZubarevLab</a></p>
+      <p>Вопросы: <a href="mailto:zubarev.marketplace@gmail.com">zubarev.marketplace@gmail.com</a></p>
+    </footer>
+  </main>
+</body>
+</html>
