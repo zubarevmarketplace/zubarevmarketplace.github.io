@@ -14,7 +14,9 @@ function replaceWithCount(input: string, search: string, replacement: string, mi
 }
 
 async function main() {
-  let html = await readFile(distIndexPath, 'utf8');
+  // Vite may preserve CRLF from a Windows checkout; matching metadata should
+  // behave the same on Windows and GitHub Actions (Linux).
+  let html = (await readFile(distIndexPath, 'utf8')).replace(/\r\n/g, '\n');
 
   html = replaceWithCount(html, '<title>Zubarev Lab — инструменты и услуги для продавцов Wildberries</title>', '<title>Калькулятор юнит-экономики Wildberries — бесплатный расчёт прибыли WB</title>', 1, 'title');
   html = replaceWithCount(html, `name="description"
