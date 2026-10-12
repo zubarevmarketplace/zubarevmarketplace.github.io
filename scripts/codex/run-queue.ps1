@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   Раннер очереди задач для Codex CLI. Берёт задачи со статусом todo из docs/BACKLOG.md,
   запускает исполнителя, прогоняет проверку (npm run check), запускает ревьюера в режиме
@@ -125,8 +125,8 @@ try {
 
     $id = $task.Id
     $script:RunLog = Join-Path $RunsDir "$id.md"
-    Write-Text $script:RunLog ("# Задача $id: " + $task.Title + "`n`nСпецификация: " + $task.Spec + "`n`n## Журнал`n`n")
-    Log "Старт задачи $id: $($task.Title)"
+    Write-Text $script:RunLog ("# Задача ${id}: " + $task.Title + "`n`nСпецификация: " + $task.Spec + "`n`n## Журнал`n`n")
+    Log "Старт задачи ${id}: $($task.Title)"
     Set-TaskStatus $id "running"
 
     $spec = Read-Text (Join-Path $Repo $task.Spec)
