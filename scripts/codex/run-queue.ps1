@@ -1,8 +1,9 @@
 ﻿<#
 .SYNOPSIS
   Раннер очереди задач для Codex CLI. Берёт задачи со статусом todo из docs/BACKLOG.md,
-  запускает исполнителя, прогоняет проверку (npm run check), запускает ревьюера в режиме
-  только чтения, при замечаниях отправляет их исполнителю, при успехе коммитит и пушит.
+  запускает исполнителя, прогоняет проверку (npm run check), запускает ревьюера (без права
+  правок), при замечаниях отправляет их исполнителю, при успехе коммитит и пушит.
+  Задача в статусе running с незавершённой работой в дереве возобновляется с проверки.
 
 .EXAMPLE
   powershell -ExecutionPolicy Bypass -File scripts\codex\run-queue.ps1
@@ -106,6 +107,15 @@ function Test-CleanTree {
   try { $s = (& git status --porcelain 2>&1 | Out-String).Trim(); return ($s.Length -eq 0) } finally { Pop-Location }
 }
 
+function Get-DiffFingerprint {
+  Push-Location $Repo
+  try {
+    $d = (& git diff 2>&1 | Out-String) + (& git ls-files --others --exclude-standard 2>&1 | Out-String)
+    $sha = [Security.Cryptography.SHA256]::Create()
+    return [BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($d)))
+  } finally { Pop-Location }
+}
+
 if (Test-Path $LockPath) {
   Write-Host "Раннер уже запущен (есть $LockPath). Если это ошибка, удалите файл."
   exit 1
@@ -118,19 +128,30 @@ try {
   $done = 0
 
   while ($done -lt $MaxTasks) {
-    if (-not (Test-CleanTree)) {
-      Write-Host "Рабочее дерево не чистое. Разберите изменения (git status) и запустите снова."
+    # Возобновление: задача в статусе running с незавершённой работой в дереве продолжается с проверки и ревью
+    $resume = $false
+    $task = Get-Tasks | Where-Object { $_.Status -eq "running" } | Select-Object -First 1
+    if ($task -and -not (Test-CleanTree)) {
+      $resume = $true
+    } elseif (-not (Test-CleanTree)) {
+      Write-Host "Рабочее дерево не чистое, а задач в статусе running нет. Разберите изменения (git status) и запустите снова."
       break
+    } else {
+      $task = Get-Tasks | Where-Object { $_.Status -eq "todo" } | Select-Object -First 1
     }
-    $task = Get-Tasks | Where-Object { $_.Status -eq "todo" } | Select-Object -First 1
     if (-not $task) { Write-Host "Очередь пуста."; break }
 
     $id = $task.Id
     $script:RunLog = Join-Path $RunsDir "$id.md"
     $script:RunLogFrozen = $false
-    Write-Text $script:RunLog ("# Задача ${id}: " + $task.Title + "`n`nСпецификация: " + $task.Spec + "`n`n## Журнал`n`n")
-    Log "Старт задачи ${id}: $($task.Title)"
-    Set-TaskStatus $id "running"
+    if ($resume) {
+      if (-not (Test-Path $script:RunLog)) { Write-Text $script:RunLog ("# Задача ${id}: " + $task.Title + "`n`nСпецификация: " + $task.Spec + "`n`n## Журнал`n`n") }
+      Log "Возобновление задачи ${id}: работа уже в дереве, исполнитель раунда 0 пропущен."
+    } else {
+      Write-Text $script:RunLog ("# Задача ${id}: " + $task.Title + "`n`nСпецификация: " + $task.Spec + "`n`n## Журнал`n`n")
+      Log "Старт задачи ${id}: $($task.Title)"
+      Set-TaskStatus $id "running"
+    }
 
     $spec = Read-Text (Join-Path $Repo $task.Spec)
     $taskWork = Join-Path $WorkDir $id
@@ -139,13 +160,15 @@ try {
     $status = "blocked"
     $feedback = ""
     for ($round = 0; $round -le $MaxFixRounds; $round++) {
-      # 1. Исполнитель
-      $prompt = $implTemplate.Replace("{{SPEC}}", $spec).Replace("{{FEEDBACK}}", $feedback)
-      $implOut = Join-Path $taskWork "impl-$round.md"
-      Log "Раунд $round. Исполнитель ($Model/$Effort) запущен."
-      $impl = Invoke-Codex $prompt $implOut $Model $Effort "workspace-write" $false
-      Log ("Исполнитель завершил работу, код " + $impl.Code + ".")
-      Append-Text $script:RunLog ("`n### Отчёт исполнителя, раунд $round`n`n" + $impl.Text + "`n")
+      # 1. Исполнитель (при возобновлении раунд 0 пропускается: работа уже в дереве)
+      if (-not ($resume -and $round -eq 0)) {
+        $prompt = $implTemplate.Replace("{{SPEC}}", $spec).Replace("{{FEEDBACK}}", $feedback)
+        $implOut = Join-Path $taskWork "impl-$round.md"
+        Log "Раунд $round. Исполнитель ($Model/$Effort) запущен."
+        $impl = Invoke-Codex $prompt $implOut $Model $Effort "workspace-write" $false
+        Log ("Исполнитель завершил работу, код " + $impl.Code + ".")
+        Append-Text $script:RunLog ("`n### Отчёт исполнителя, раунд $round`n`n" + $impl.Text + "`n")
+      }
 
       # 2. Проверка сборки и тестов
       $checkLog = Join-Path $taskWork "check-$round.log"
@@ -157,13 +180,16 @@ try {
       }
       Log ("npm run " + $check.Script + " прошёл.")
 
-      # 3. Ревьюер в режиме только чтения
+      # 3. Ревьюер. Песочница read-only на Windows нестабильна (helper_unknown_error), поэтому ревьюер
+      #    работает в workspace-write с запретом правок в промпте, а раннер проверяет, что файлы не изменились.
       $reviewPrompt = $reviewTemplate.Replace("{{SPEC}}", $spec).Replace("{{DIFF}}", (Get-DiffSummary))
       $review = $null
       for ($attempt = 0; $attempt -lt 3; $attempt++) {
         $reviewOut = Join-Path $taskWork "review-$round-$attempt.md"
         Log "Ревьюер ($ReviewModel/$ReviewEffort) запущен, попытка $attempt."
-        $review = Invoke-Codex $reviewPrompt $reviewOut $ReviewModel $ReviewEffort "read-only" $true
+        $diffBefore = Get-DiffFingerprint
+        $review = Invoke-Codex $reviewPrompt $reviewOut $ReviewModel $ReviewEffort "workspace-write" $true
+        if ((Get-DiffFingerprint) -ne $diffBefore) { Log "ВНИМАНИЕ: ревьюер изменил файлы, хотя это запрещено. Проверьте git diff." }
         $envFailure = ($review.Text -match '(?m)^\s*VERDICT:\s*RETRY') -or ($review.Text -match 'helper_unknown_error') -or ($review.Text.Trim().Length -eq 0)
         if (-not $envFailure) { break }
         Log "Ревьюер не смог изучить изменения (сбой среды), повтор."
