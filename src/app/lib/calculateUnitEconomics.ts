@@ -131,8 +131,11 @@ function calculateTax(taxMode: TaxMode, taxRate: number, buyerPrice: number, tax
 export function calculateUnitEconomics(
   input: CalculatorInput,
   model: ResultMode,
-  isAdvanced: boolean,
+  mode: boolean | 'subject-simple',
 ): UnitEconomicsResult {
+  // Exact subject commission with the existing simple-mode costs and toggles.
+  const isAdvanced = mode === true;
+  const useSubjectCommission = isAdvanced || mode === 'subject-simple';
   const simpleCategory = categories.find((c) => c.id === input.categoryId) ?? categories[0];
   const selectedCommissionTariff =
     commissionTariffs.find((t: CommissionTariff) => t.id === input.commissionTariffId) ?? defaultCommissionTariff;
@@ -148,8 +151,8 @@ export function calculateUnitEconomics(
   const drrPercent = isAdvanced ? clamp(input.adRate, 0, 100) : input.includeAds ? clamp(input.adRate, 0, 100) : 0;
   const adCost = priceBeforeWbDiscount * (drrPercent / 100);
 
-  const fboCommissionRate = isAdvanced ? selectedCommissionTariff.fboCommissionRate : simpleCategory.fboCommissionRate;
-  const fbsCommissionRate = isAdvanced ? selectedCommissionTariff.fbsCommissionRate : simpleCategory.fbsCommissionRate;
+  const fboCommissionRate = useSubjectCommission ? selectedCommissionTariff.fboCommissionRate : simpleCategory.fboCommissionRate;
+  const fbsCommissionRate = useSubjectCommission ? selectedCommissionTariff.fbsCommissionRate : simpleCategory.fbsCommissionRate;
   const commissionRatePercent = model === 'fbo' ? fboCommissionRate : fbsCommissionRate;
 
   const commissionData = calculateCommissionAndAcquiring(

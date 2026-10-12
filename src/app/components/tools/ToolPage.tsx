@@ -36,10 +36,10 @@ export default function ToolPage({ tool, children, howItWorks, introduction }: T
         <section aria-labelledby="tool-faq" className="space-y-4">
           <h2 id="tool-faq" className="text-xl md:text-2xl">Частые вопросы</h2>
           <div className="max-w-3xl divide-y divide-white/10">
-            {tool.faq.map(({ question, answer }) => (
+            {tool.faq.map(({ question, answer, link }) => (
               <details key={question} className="py-4">
                 <summary className="cursor-pointer rounded-sm text-white/90 focus-visible:outline-2 focus-visible:outline-cyan-400">{question}</summary>
-                <p className="mt-3 text-sm leading-relaxed text-white/70">{answer}</p>
+                <p className="mt-3 text-sm leading-relaxed text-white/70">{answer}{link && tools.some((entry) => entry.slug === link.slug) && <> <a href={'/tools/' + link.slug} className="text-cyan-300 underline underline-offset-4">{link.label}</a></>}</p>
               </details>
             ))}
           </div>

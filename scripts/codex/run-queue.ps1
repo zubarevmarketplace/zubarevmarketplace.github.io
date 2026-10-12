@@ -159,9 +159,15 @@ try {
 
       # 3. Ревьюер в режиме только чтения
       $reviewPrompt = $reviewTemplate.Replace("{{SPEC}}", $spec).Replace("{{DIFF}}", (Get-DiffSummary))
-      $reviewOut = Join-Path $taskWork "review-$round.md"
-      Log "Ревьюер ($ReviewModel/$ReviewEffort) запущен."
-      $review = Invoke-Codex $reviewPrompt $reviewOut $ReviewModel $ReviewEffort "read-only" $true
+      $review = $null
+      for ($attempt = 0; $attempt -lt 3; $attempt++) {
+        $reviewOut = Join-Path $taskWork "review-$round-$attempt.md"
+        Log "Ревьюер ($ReviewModel/$ReviewEffort) запущен, попытка $attempt."
+        $review = Invoke-Codex $reviewPrompt $reviewOut $ReviewModel $ReviewEffort "read-only" $true
+        $envFailure = ($review.Text -match '(?m)^\s*VERDICT:\s*RETRY') -or ($review.Text -match 'helper_unknown_error') -or ($review.Text.Trim().Length -eq 0)
+        if (-not $envFailure) { break }
+        Log "Ревьюер не смог изучить изменения (сбой среды), повтор."
+      }
       Append-Text $script:RunLog ("`n### Ревью, раунд $round`n`n" + $review.Text + "`n")
       if ($review.Text -match '(?m)^\s*VERDICT:\s*PASS') {
         Log "Ревью: PASS."

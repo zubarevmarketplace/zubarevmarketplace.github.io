@@ -11,7 +11,7 @@
 | 001 | done | Каркас инструментов: реестр, страница /tools, шаблон страницы, sitemap, vitest | docs/tasks/001-tools-foundation.md |
 | 002 | done | Единый справочник тарифов с датой актуальности | docs/tasks/002-tariff-registry.md |
 | 003 | done | Статический HTML для каждого маршрута (SSG) | docs/tasks/003-static-prerender.md |
-| 004 | todo | Инструмент «Цена под маржу» /tools/price-for-margin | docs/tasks/004-price-for-margin.md |
+| 004 | done | Инструмент «Цена под маржу» /tools/price-for-margin | docs/tasks/004-price-for-margin.md |
 | 005 | todo | Инструмент «Точка безубыточности и цена для акции» /tools/break-even | docs/tasks/005-break-even.md |
 | 006 | todo | Инструмент «ДРР и рекламный бюджет» /tools/drr | docs/tasks/006-drr-budget.md |
 | 007 | todo | Инструмент «FBO или FBS» /tools/fbo-vs-fbs | docs/tasks/007-fbo-vs-fbs.md |

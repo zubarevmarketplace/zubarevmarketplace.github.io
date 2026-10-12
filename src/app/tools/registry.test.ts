@@ -1,5 +1,6 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { tools } from './registry';
+import { tools, plannedToolSlugs } from './registry';
 
 describe('реестр инструментов', () => {
   it('содержит калькулятор WB и уникальные slug', () => {
@@ -26,8 +27,15 @@ describe('реестр инструментов', () => {
     }
   });
 
-  it('все related ссылаются на существующие инструменты', () => {
-    const slugs = new Set(tools.map((tool) => tool.slug));
+  it('запланированные ссылки соответствуют задачам очереди', () => {
+    const backlog = readFileSync(new URL('../../../docs/BACKLOG.md', import.meta.url), 'utf8');
+    for (const slug of plannedToolSlugs) {
+      expect(backlog).toContain('/tools/' + slug);
+    }
+  });
+
+  it('все related ссылаются на существующие или явно запланированные инструменты', () => {
+    const slugs = new Set<string>([...tools.map((tool) => tool.slug), ...plannedToolSlugs]);
     for (const tool of tools) {
       for (const slug of tool.related) {
         expect(slugs.has(slug), tool.slug + ' → ' + slug).toBe(true);
