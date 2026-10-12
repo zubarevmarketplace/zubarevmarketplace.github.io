@@ -1,6 +1,9 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './app/App';
+import ToolsIndexPage from './app/pages/ToolsIndexPage';
+import NotFoundPage from './app/pages/NotFoundPage';
+import { resolveRoute } from './app/tools/routes';
 import './styles/index.css';
 
 type TelegramWindow = Window & {
@@ -68,24 +71,23 @@ const detectWebViewSafeMode = () => {
   }
 };
 
-detectWebViewSafeMode();
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  detectWebViewSafeMode();
 
-const WbCalculatorPage = React.lazy(() => import('./app/pages/WbCalculatorPage'));
-const normalizePathname = (pathname: string) => {
-  if (!pathname) return '/';
-  return pathname !== '/' && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
-};
-const calculatorPaths = new Set(['/calculator', '/tools/wb-calculator']);
-const isCalculatorRoute = calculatorPaths.has(normalizePathname(window.location.pathname));
+  const route = resolveRoute(window.location.pathname);
+  const Tool = route.kind === 'tool' ? React.lazy(route.tool.load) : null;
+  const page = route.kind === 'home' ? <App />
+    : route.kind === 'tools' ? <ToolsIndexPage />
+    : Tool ? <Tool /> : <NotFoundPage />;
+  const root = document.getElementById('root');
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    {isCalculatorRoute ? (
-      <Suspense fallback={<div className="min-h-screen bg-[#070B10]" />}>
-        <WbCalculatorPage />
-      </Suspense>
-    ) : (
-      <App />
-    )}
-  </React.StrictMode>,
-);
+  if (root) {
+    ReactDOM.createRoot(root).render(
+      <React.StrictMode>
+        <Suspense fallback={<div className="min-h-screen bg-[#070B10]" />}>
+          {page}
+        </Suspense>
+      </React.StrictMode>,
+    );
+  }
+}

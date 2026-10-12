@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vite build && tsx scripts/generate-static-route-meta.ts",
+    "build": "vite build && tsx scripts/generate-static-route-meta.ts && tsx scripts/generate-sitemap.ts",
     "generate:wb-tariffs": "tsx scripts/generate-wb-tariffs.ts",
-    "submit:indexnow": "tsx scripts/submit-indexnow.ts"
+    "submit:indexnow": "tsx scripts/submit-indexnow.ts",
+    "test": "vitest run",
+    "check": "npm run build && npm test"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -73,7 +75,8 @@
     "@vitejs/plugin-react": "4.7.0",
     "tailwindcss": "4.1.12",
     "tsx": "4.20.3",
-    "vite": "6.3.5"
+    "vite": "6.3.5",
+    "vitest": "^4.1.11"
   },
   "peerDependencies": {
     "react": "18.3.1",

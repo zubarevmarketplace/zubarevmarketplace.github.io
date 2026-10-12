@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import SiteLogo from './SiteLogo';
 
 type HeaderProps = {
-  currentPage: 'home' | 'calculator';
+  currentPage: 'home' | 'calculator' | 'tools';
 };
 
 const landingLinks = [
@@ -68,7 +68,7 @@ export default function Header({ currentPage }: HeaderProps) {
           <SiteLogo className="w-[58px] h-[58px] md:w-[67px] md:h-[67px]" />
         </a>
 
-        <div className="hidden md:flex flex-1 items-center justify-center gap-8 lg:gap-10 xl:gap-12 min-w-0">
+        <div className="hidden md:flex flex-1 items-center justify-center gap-4 lg:gap-8 xl:gap-10 min-w-0">
           {landingLinks.map((link) => (
             <a key={link.label} href={link.href} className="text-sm text-white/60 hover:text-white/90 transition-colors whitespace-nowrap">
               {link.label}
@@ -79,6 +79,13 @@ export default function Header({ currentPage }: HeaderProps) {
             className={`text-sm transition-colors whitespace-nowrap ${currentPage === 'calculator' ? 'text-white' : 'text-white/60 hover:text-white/90'}`}
           >
             Калькулятор
+          </a>
+          <a
+            href="/tools"
+            aria-current={currentPage === 'tools' ? 'page' : undefined}
+            className={`text-sm transition-colors whitespace-nowrap ${currentPage === 'tools' ? 'text-white' : 'text-white/60 hover:text-white/90'}`}
+          >
+            Инструменты
           </a>
         </div>
 
@@ -120,6 +127,14 @@ export default function Header({ currentPage }: HeaderProps) {
               className={`block transition-colors py-2 ${currentPage === 'calculator' ? 'text-white' : 'text-white/70 hover:text-white'}`}
             >
               Калькулятор
+            </a>
+            <a
+              href="/tools"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-current={currentPage === 'tools' ? 'page' : undefined}
+              className={`block transition-colors py-2 ${currentPage === 'tools' ? 'text-white' : 'text-white/70 hover:text-white'}`}
+            >
+              Инструменты
             </a>
             <a
               href="/#contacts"

@@ -4,7 +4,7 @@ import Header from './Header';
 
 type LayoutProps = {
   children: ReactNode;
-  currentPage: 'home' | 'calculator';
+  currentPage: 'home' | 'calculator' | 'tools';
 };
 
 export default function Layout({ children, currentPage }: LayoutProps) {
