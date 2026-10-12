@@ -40,10 +40,12 @@ function Write-Text($path, $text) { [IO.File]::WriteAllText($path, $text, $Utf8)
 function Append-Text($path, $text) { [IO.File]::AppendAllText($path, $text, $Utf8) }
 
 $script:RunLog = $null
+$script:RunLogFrozen = $false
 function Log($msg) {
   $line = "[{0}] {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $msg
   Write-Host $line
-  if ($script:RunLog) { Append-Text $script:RunLog ($line + "`n") }
+  if ($script:RunLog -and -not $script:RunLogFrozen) { Append-Text $script:RunLog ($line + "`n") }
+  Append-Text (Join-Path $WorkDir "runner.log") ($line + "`n")
 }
 
 function Get-Tasks {
@@ -125,6 +127,7 @@ try {
 
     $id = $task.Id
     $script:RunLog = Join-Path $RunsDir "$id.md"
+    $script:RunLogFrozen = $false
     Write-Text $script:RunLog ("# Задача ${id}: " + $task.Title + "`n`nСпецификация: " + $task.Spec + "`n`n## Журнал`n`n")
     Log "Старт задачи ${id}: $($task.Title)"
     Set-TaskStatus $id "running"
@@ -174,6 +177,8 @@ try {
 
     Push-Location $Repo
     try {
+      # После этой точки журнал задачи больше не меняется: иначе дерево станет грязным после коммита
+      $script:RunLogFrozen = $true
       if ($status -eq "done") {
         & git add -A 2>&1 | Out-Null
         & git commit -q -m ("task " + $id + ": " + $task.Title + "`n`nАвтоматическая реализация через Codex, см. docs/runs/" + $id + ".md") 2>&1 | Out-Null
