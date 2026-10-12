@@ -27,6 +27,7 @@ export interface CalculatorInput {
   manualDeliveryToWbPerUnit: number;
   packagingCost: number;
   manualFulfillmentCost: number;
+  manualProcessingCost?: number; // FBS order processing; registry default when omitted
   otherCosts: number;
 }
 

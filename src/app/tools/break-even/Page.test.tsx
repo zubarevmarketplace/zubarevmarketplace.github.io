@@ -29,7 +29,7 @@ describe('страница безубытка', () => {
     expect(html).toContain('href="/tools/price-for-margin"');
     expect(html).toContain('href="/tools/wb-calculator"');
     expect(html).toContain('href="/tools/drr"');
-    expect(html).not.toContain('href="/tools/fbo-vs-fbs"');
+    expect(html).toContain('href="/tools/fbo-vs-fbs"');
     expect(html).toContain('href="/#formats"');
     expect(resolveRoute('/tools/break-even/')).toEqual({ kind: 'tool', tool });
     expect(generateSitemap(tools)).toContain('<loc>https://zubarevlab.ru/tools/break-even</loc>');

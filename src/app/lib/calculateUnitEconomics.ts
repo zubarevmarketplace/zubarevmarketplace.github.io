@@ -184,7 +184,9 @@ export function calculateUnitEconomics(
   const storageDays = clamp(isAdvanced ? input.manualStorageDays : defaults.storageDays, 0, 365);
   const storage =
     model === 'fbo' ? context.volumeLiters * 0.08 * context.geoStorageCoefficient * storageDays : 0;
-  const processing = model === 'fbs' ? defaults.fbsProcessingCost : 0;
+  const processing = model === 'fbs'
+    ? clamp(isAdvanced ? input.manualProcessingCost ?? defaults.fbsProcessingCost : defaults.fbsProcessingCost, 0, 100000)
+    : 0;
   const fulfillment = isAdvanced
     ? clamp(input.manualFulfillmentCost, 0, 100000)
     : input.includeFulfillment
