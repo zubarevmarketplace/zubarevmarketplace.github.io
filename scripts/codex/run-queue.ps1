@@ -69,7 +69,8 @@ function Set-TaskStatus($id, $status) {
 
 function Invoke-Codex($prompt, $outFile, $model, $effort, $sandbox, $ephemeral) {
   $streamLog = "$outFile.stream.log"
-  $args = @("exec", "-m", $model, "-c", "model_reasoning_effort=`"$effort`"", "-s", $sandbox,
+  # windows.sandbox=unelevated: режим elevated на этой машине падает с helper_unknown_error и блокирует все команды
+  $args = @("exec", "-m", $model, "-c", "model_reasoning_effort=`"$effort`"", "-c", "windows.sandbox=`"unelevated`"", "-s", $sandbox,
             "--skip-git-repo-check", "--color", "never", "-C", $Repo, "-o", $outFile)
   if ($ephemeral) { $args += "--ephemeral" }
   $args += "-"
