@@ -1,3 +1,4 @@
+import { serializeStructuredData } from '../seo/metadata';
 import { useEffect } from 'react';
 
 type SeoProps = {
@@ -7,6 +8,7 @@ type SeoProps = {
   ogType?: string;
   ogUrl: string;
   ogImage?: string;
+  structuredData?: Record<string, unknown>[];
 };
 
 function upsertMetaByName(name: string, content: string) {
@@ -39,7 +41,7 @@ function upsertCanonical(href: string) {
   link.setAttribute('href', href);
 }
 
-export default function Seo({ title, description, canonical, ogType = 'website', ogUrl, ogImage }: SeoProps) {
+export default function Seo({ title, description, canonical, ogType = 'website', ogUrl, ogImage, structuredData }: SeoProps) {
   useEffect(() => {
     document.title = title;
     upsertMetaByName('description', description);
@@ -51,6 +53,7 @@ export default function Seo({ title, description, canonical, ogType = 'website',
     upsertMetaByProperty('og:url', ogUrl);
 
     upsertMetaByName('twitter:card', 'summary_large_image');
+    upsertMetaByName('twitter:url', ogUrl);
     upsertMetaByName('twitter:title', title);
     upsertMetaByName('twitter:description', description);
 
@@ -58,7 +61,16 @@ export default function Seo({ title, description, canonical, ogType = 'website',
       upsertMetaByProperty('og:image', ogImage);
       upsertMetaByName('twitter:image', ogImage);
     }
-  }, [title, description, canonical, ogType, ogUrl, ogImage]);
+    if (structuredData) {
+      document.head.querySelectorAll('script[type="application/ld+json"]').forEach((script) => script.remove());
+      for (const data of structuredData) {
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.textContent = serializeStructuredData(data);
+        document.head.appendChild(script);
+      }
+    }
+  }, [title, description, canonical, ogType, ogUrl, ogImage, structuredData]);
 
   return null;
 }

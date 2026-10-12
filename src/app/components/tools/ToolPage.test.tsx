@@ -1,3 +1,4 @@
+import { getToolMetadata, renderHead, toolsMetadata } from '../../seo/metadata';
 import { describe, expect, it } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { tools } from '../../tools/registry';
@@ -28,7 +29,7 @@ describe('шаблон инструмента', () => {
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
     expect(html.toLowerCase()).toContain('datetime="' + tariffRegistry.meta.updatedAt + '"');
     expect(html).toContain('href="/tools/wb-calculator"');
-    expect(readJsonLd(html)).toEqual({
+    expect(readJsonLd(renderHead(getToolMetadata(tool)))).toEqual({
       '@context': 'https://schema.org', '@type': 'FAQPage',
       mainEntity: tool.faq.map(({ question, answer }) => ({
         '@type': 'Question', name: question,
@@ -60,7 +61,7 @@ describe('шаблон инструмента', () => {
 describe('список инструментов', () => {
   it('карточки и ItemList получают данные из реестра при статическом рендере', () => {
     const html = renderToStaticMarkup(<ToolsIndexPage />);
-    const data = readJsonLd(html);
+    const data = readJsonLd(renderHead(toolsMetadata));
     expect(data['@type']).toBe('ItemList');
     expect(data.itemListElement).toEqual(tools.map((tool, index) => ({
       '@type': 'ListItem', position: index + 1, name: tool.h1,

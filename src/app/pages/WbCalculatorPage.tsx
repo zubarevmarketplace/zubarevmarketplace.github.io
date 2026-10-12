@@ -1,3 +1,4 @@
+import { getPageMetadata } from '../seo/metadata';
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { categories } from "../config/categories";
@@ -17,6 +18,8 @@ import type {
 import Layout from "../components/layout/Layout";
 import Seo from "../components/Seo";
 import TariffDateNote from "../components/tools/TariffDateNote";
+
+const calculatorMetadata = getPageMetadata('/calculator');
 
 const initial: CalculatorInput = {
   categoryId: "home",
@@ -154,13 +157,7 @@ export default function WbCalculatorPage() {
   return (
 
     <Layout currentPage="calculator">
-      <Seo
-        title="Калькулятор юнит-экономики Wildberries — бесплатный расчёт прибыли WB"
-        description="Бесплатный калькулятор юнит-экономики Wildberries: рассчитайте прибыль, маржу, ROI, комиссии WB, логистику, хранение, рекламу, налоги и СПП."
-        canonical="https://zubarevlab.ru/calculator"
-        ogUrl="https://zubarevlab.ru/calculator"
-        ogImage="https://zubarevlab.ru/og-wb-calculator.jpg"
-      />
+      <Seo {...calculatorMetadata} ogUrl={calculatorMetadata.canonical} />
       <div className="fixed inset-0 pointer-events-none background-glows" data-decorative="true">
         <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-cyan-500/25 rounded-full blur-[150px]" />
         <div className="absolute top-0 -right-1/4 w-1/2 h-1/2 bg-amber-500/20 rounded-full blur-[150px]" />
@@ -731,7 +728,7 @@ function CustomSelect({
         {selected?.label ?? 'Выберите'}
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/45">▾</span>
       </button>
-      {open &&
+      {open && typeof document !== 'undefined' &&
         createPortal(
           <div style={{ position: 'fixed', left: pos.left, top: pos.top, width: pos.width, zIndex: 1200 }}>
             <div className={`rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/30 p-1 ${options.length <= 10 ? '' : 'max-h-[280px] overflow-auto'}`}>
@@ -856,7 +853,7 @@ function AutocompleteSelect({ value, onChange, options, placeholder }: { value: 
         />
       </div>
       {error && <p className="mt-1 text-xs text-red-300">{error}</p>}
-      {open &&
+      {open && typeof document !== 'undefined' &&
         createPortal(
           <div style={{ position: "fixed", left: pos.left, top: pos.top, width: pos.width, zIndex: 1200 }}>
             <div className="rounded-xl border border-white/10 bg-[#0F1820] shadow-2xl shadow-cyan-900/30 p-1 max-h-[320px] overflow-auto">
@@ -940,7 +937,7 @@ function Tip({ text }: { text: string }) {
       >
         i
       </button>
-      {open &&
+      {open && typeof document !== 'undefined' &&
         createPortal(
           <div
             style={{

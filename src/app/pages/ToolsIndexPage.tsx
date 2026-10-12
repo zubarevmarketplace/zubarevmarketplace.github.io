@@ -1,22 +1,12 @@
 import Layout from '../components/layout/Layout';
 import Seo from '../components/Seo';
-import StructuredData from '../components/tools/StructuredData';
+import { toolsMetadata } from '../seo/metadata';
 import { tools } from '../tools/registry';
 
 export default function ToolsIndexPage() {
-  const url = 'https://zubarevlab.ru/tools';
   return (
     <Layout currentPage="tools">
-      <Seo title="Бесплатные инструменты для продавцов Wildberries и Ozon"
-        description="Бесплатные онлайн-инструменты для продавцов Wildberries и Ozon. Рассчитайте юнит-экономику, прибыль и расходы товара без регистрации."
-        canonical={url} ogUrl={url} ogImage="https://zubarevlab.ru/og-image.jpg" />
-      <StructuredData data={{
-        '@context': 'https://schema.org', '@type': 'ItemList',
-        itemListElement: tools.map((tool, index) => ({
-          '@type': 'ListItem', position: index + 1, name: tool.h1,
-          url: 'https://zubarevlab.ru/tools/' + tool.slug,
-        })),
-      }} />
+      <Seo {...toolsMetadata} ogUrl={toolsMetadata.canonical} />
       <section className="relative mx-auto max-w-[1240px] space-y-8 px-4 py-10 md:px-8 md:py-16">
         <div className="max-w-3xl space-y-4">
           <h1 className="text-3xl leading-tight tracking-tight md:text-4xl">Бесплатные инструменты для продавцов Wildberries и Ozon</h1>

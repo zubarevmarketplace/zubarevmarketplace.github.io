@@ -1,3 +1,4 @@
+import { homeMetadata } from './seo/metadata';
 import { useState, Fragment } from 'react';
 import Layout from './components/layout/Layout';
 import Seo from './components/Seo';
@@ -24,13 +25,7 @@ export default function App() {
   return (
 
     <Layout currentPage="home">
-      <Seo
-        title="Zubarev Lab — инструменты и услуги для продавцов Wildberries"
-        description="Инструменты, аналитика и услуги для продавцов Wildberries: юнит-экономика, логистика, комиссии, прибыль, продвижение и рост продаж."
-        canonical="https://zubarevlab.ru/"
-        ogUrl="https://zubarevlab.ru/"
-        ogImage="https://zubarevlab.ru/og-image.jpg"
-      />
+      <Seo {...homeMetadata} ogUrl={homeMetadata.canonical} />
       <style>{`
         html {
           scroll-behavior: smooth;
@@ -719,7 +714,7 @@ export default function App() {
                       <div>
                         <button
                           onClick={() => {
-                            const contactsSection = document.getElementById('contacts');
+                            const contactsSection = typeof document !== 'undefined' ? document.getElementById('contacts') : null;
                             contactsSection?.scrollIntoView({ behavior: 'smooth' });
                           }}
                           className="w-full md:w-auto px-6 py-3 bg-cyan-500 hover:bg-cyan-400 rounded-2xl transition-all shadow-lg shadow-cyan-500/20 text-sm"
@@ -949,7 +944,7 @@ export default function App() {
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
               <button
                 onClick={() => {
-                  const contactsSection = document.getElementById('contacts');
+                  const contactsSection = typeof document !== 'undefined' ? document.getElementById('contacts') : null;
                   contactsSection?.scrollIntoView({ behavior: 'smooth' });
                 }}
                 className="px-6 py-3 md:px-8 md:py-4 bg-cyan-500 hover:bg-cyan-400 rounded-xl md:rounded-2xl transition-all shadow-lg shadow-cyan-500/20 text-sm md:text-base"
@@ -1202,7 +1197,7 @@ export default function App() {
 
             <button
               onClick={() => {
-                const contactsSection = document.getElementById('contacts');
+                const contactsSection = typeof document !== 'undefined' ? document.getElementById('contacts') : null;
                 contactsSection?.scrollIntoView({ behavior: 'smooth' });
               }}
               className="inline-flex px-8 py-3 bg-cyan-500 hover:bg-cyan-400 rounded-2xl transition-all shadow-lg shadow-cyan-500/20 text-sm" data-cta="primary"
@@ -1363,7 +1358,7 @@ export default function App() {
               </div>
               <button
                 onClick={() => {
-                  const contactsSection = document.getElementById('contacts');
+                  const contactsSection = typeof document !== 'undefined' ? document.getElementById('contacts') : null;
                   contactsSection?.scrollIntoView({ behavior: 'smooth' });
                 }}
                 className="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 rounded-2xl transition-all shadow-lg shadow-cyan-500/20 whitespace-nowrap text-sm"
@@ -1446,7 +1441,7 @@ export default function App() {
         <button
           onClick={() => {
             if (floatingButtonExpanded) {
-              const contactsSection = document.getElementById('contacts');
+              const contactsSection = typeof document !== 'undefined' ? document.getElementById('contacts') : null;
               contactsSection?.scrollIntoView({ behavior: 'smooth' });
               setFloatingButtonExpanded(false);
             } else {

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import Layout from '../layout/Layout';
 import Seo from '../Seo';
 import { tools, type ToolDefinition } from '../../tools/registry';
-import StructuredData from './StructuredData';
+import { getToolMetadata } from '../../seo/metadata';
 import TariffDateNote from './TariffDateNote';
 
 export type ToolPageProps = {
@@ -13,23 +13,14 @@ export type ToolPageProps = {
 };
 
 export default function ToolPage({ tool, children, howItWorks, introduction }: ToolPageProps) {
-  const url = 'https://zubarevlab.ru/tools/' + tool.slug;
+  const metadata = getToolMetadata(tool);
   const relatedTools = tool.related
     .map((slug) => tools.find((entry) => entry.slug === slug))
     .filter((entry): entry is ToolDefinition => Boolean(entry));
 
   return (
     <Layout currentPage="tools">
-      <Seo title={tool.title} description={tool.description} canonical={url} ogUrl={url}
-        ogImage={tool.ogImage ?? 'https://zubarevlab.ru/og-image.jpg'} />
-      <StructuredData data={{
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: tool.faq.map(({ question, answer }) => ({
-          '@type': 'Question', name: question,
-          acceptedAnswer: { '@type': 'Answer', text: answer },
-        })),
-      }} />
+      <Seo {...metadata} ogUrl={metadata.canonical} />
       <article className="relative mx-auto max-w-[1240px] space-y-10 px-4 py-10 md:px-8 md:py-16">
         <header className="max-w-3xl space-y-4">
           <h1 className="text-2xl tracking-tight md:text-4xl">{tool.h1}</h1>
