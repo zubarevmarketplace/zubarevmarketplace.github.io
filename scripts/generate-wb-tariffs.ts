@@ -12,6 +12,8 @@ const commissionOut = path.join(
   "src/calculator/data/commissionTariffs.json",
 );
 
+const metaOut = path.join(root, "src/calculator/data/tariffMeta.json");
+
 const warehouseOut = path.join(
   root,
   "src/calculator/config/warehouseTariffs.ts",
@@ -280,11 +282,9 @@ const commissionTariffs: CommissionTariff[] = commissionRows.flatMap((row) => {
   ];
 });
 
-fs.writeFileSync(
-  commissionOut,
-  JSON.stringify(commissionTariffs, null, 2),
-  "utf8",
-);
+if (commissionTariffs.length === 0) {
+  throw new Error("Commission workbook does not contain valid tariffs");
+}
 
 /**
  * WAREHOUSE TARIFFS
@@ -368,8 +368,7 @@ for (const key of REQUIRED_WAREHOUSES) {
   const candidate = warehouseCandidates[key];
 
   if (!candidate) {
-    console.warn(`Missing warehouse tariff for: ${key}`);
-    continue;
+    throw new Error(`Missing warehouse tariff for: ${key}`);
   }
 
   warehouseTariffs[key] = {
@@ -386,7 +385,25 @@ const warehouseTs = `export const warehouseTariffs = ${JSON.stringify(
   2,
 )} as const;\n`;
 
+fs.writeFileSync(
+  commissionOut,
+  JSON.stringify(commissionTariffs, null, 2),
+  "utf8",
+);
 fs.writeFileSync(warehouseOut, warehouseTs, "utf8");
+// Дата генерации в часовом поясе WB: ночью в Москве UTC ещё может быть вчера.
+const updatedAt = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Europe/Moscow",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+}).format(new Date());
+
+fs.writeFileSync(
+  metaOut,
+  JSON.stringify({ updatedAt }, null, 2) + "\n",
+  "utf8",
+);
 
 console.log(`Generated commission tariffs: ${commissionTariffs.length}`);
 console.log(

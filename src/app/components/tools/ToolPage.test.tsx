@@ -3,6 +3,9 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { tools } from '../../tools/registry';
 import ToolsIndexPage from '../../pages/ToolsIndexPage';
 import ToolPage from './ToolPage';
+import TariffDateNote from './TariffDateNote';
+import WbCalculatorPage from '../../pages/WbCalculatorPage';
+import { tariffRegistry } from '../../config/tariffRegistry';
 import StructuredData from './StructuredData';
 
 function readJsonLd(html: string): Record<string, unknown> {
@@ -19,11 +22,11 @@ describe('шаблон инструмента', () => {
         <div>Результат инструмента</div>
       </ToolPage>,
     );
-    const markers = [tool.h1, 'Результат инструмента', 'Как считается', 'Частые вопросы', 'Дата актуальности тарифов', 'Смежные инструменты', 'Посмотреть форматы разбора'];
+    const markers = [tool.h1, 'Результат инструмента', 'Как считается', 'Частые вопросы', 'Тарифы актуальны на', 'Смежные инструменты', 'Посмотреть форматы разбора'];
     const positions = markers.map((marker) => html.indexOf(marker, html.indexOf('<article')));
     expect(positions.every((position) => position >= 0)).toBe(true);
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
-    expect(html.toLowerCase()).toContain('datetime="' + tool.updatedAt + '"');
+    expect(html.toLowerCase()).toContain('datetime="' + tariffRegistry.meta.updatedAt + '"');
     expect(html).toContain('href="/tools/wb-calculator"');
     expect(readJsonLd(html)).toEqual({
       '@context': 'https://schema.org', '@type': 'FAQPage',
@@ -33,6 +36,19 @@ describe('шаблон инструмента', () => {
       })),
     });
   });
+  it('калькулятор и ToolPage показывают одну дату из справочника, независимо от даты инструмента', () => {
+    const note = renderToStaticMarkup(<TariffDateNote />);
+    const tool = { ...tools[0], updatedAt: '1999-01-01' };
+    const html = renderToStaticMarkup(
+      <ToolPage tool={tool} howItWorks={<p>Формула</p>}><div>Результат</div></ToolPage>,
+    );
+    const calculator = renderToStaticMarkup(<WbCalculatorPage />);
+    expect(html).toContain(note);
+    expect(calculator).toContain(note);
+    expect(note).toContain('Перед поставкой сверьте с кабинетом WB.');
+    expect(html).not.toContain('datetime="1999-01-01"');
+  });
+
   it('JSON-LD безопасно сохраняет текст с закрывающим тегом script', () => {
     const data = { text: '</script><script>test</script>' };
     const html = renderToStaticMarkup(<StructuredData data={data} />);

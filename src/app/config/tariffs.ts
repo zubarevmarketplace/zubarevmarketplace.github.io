@@ -1,15 +1,4 @@
-export const palletConfig = {
-  lengthCm: 120,
-  widthCm: 80,
-  maxHeightCm: 160,
-};
+import { tariffRegistry } from './tariffRegistry';
 
-export const defaults = {
-  simplePlatformDiscountRate: 30,
-  fbsProcessingCost: 20,
-  fulfillmentCost: 20,
-  storageDays: 30,
-  acquiringRatePercent: 1.5,
-  maxLocalizationLogisticsMarkup: 0.3,
-  maxSalesDistributionIndexRate: 0.01,
-};
+export const defaults = tariffRegistry.wb.defaults;
+export const palletConfig = tariffRegistry.wb.pallet;

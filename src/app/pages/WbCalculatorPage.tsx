@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { categories } from "../config/categories";
-import rawCommissionTariffs from "../../calculator/data/commissionTariffs.json";
+import { commissionTariffs as rawCommissionTariffs } from "../config/tariffRegistry";
 import { geoPresets } from "../config/geoPresets";
 import {
   calculateUnitEconomics,
@@ -16,6 +16,7 @@ import type {
 } from "../types/calculator";
 import Layout from "../components/layout/Layout";
 import Seo from "../components/Seo";
+import TariffDateNote from "../components/tools/TariffDateNote";
 
 const initial: CalculatorInput = {
   categoryId: "home",
@@ -500,6 +501,7 @@ export default function WbCalculatorPage() {
                 ]}
               />
             </div>
+            <TariffDateNote />
             {r.isSgt && (
               <div className="p-3 rounded-xl border border-red-400/40 bg-red-500/10 text-red-200 text-sm">
                 Калькулятор не считает корректно сверхгабаритные товары. Для СГТ

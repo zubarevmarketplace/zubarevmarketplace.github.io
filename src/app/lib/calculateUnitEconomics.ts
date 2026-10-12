@@ -1,4 +1,4 @@
-import rawCommissionTariffs from '../../calculator/data/commissionTariffs.json';
+import { commissionTariffs as rawCommissionTariffs } from '../config/tariffRegistry';
 import { categories } from '../config/categories';
 import { geoPresets } from '../config/geoPresets';
 import { defaults, palletConfig } from '../config/tariffs';

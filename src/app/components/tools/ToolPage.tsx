@@ -3,6 +3,7 @@ import Layout from '../layout/Layout';
 import Seo from '../Seo';
 import { tools, type ToolDefinition } from '../../tools/registry';
 import StructuredData from './StructuredData';
+import TariffDateNote from './TariffDateNote';
 
 export type ToolPageProps = {
   tool: ToolDefinition;
@@ -16,7 +17,6 @@ export default function ToolPage({ tool, children, howItWorks, introduction }: T
   const relatedTools = tool.related
     .map((slug) => tools.find((entry) => entry.slug === slug))
     .filter((entry): entry is ToolDefinition => Boolean(entry));
-  const date = new Intl.DateTimeFormat('ru-RU', { timeZone: 'UTC' }).format(new Date(tool.updatedAt));
 
   return (
     <Layout currentPage="tools">
@@ -53,7 +53,7 @@ export default function ToolPage({ tool, children, howItWorks, introduction }: T
             ))}
           </div>
         </section>
-        <p className="text-sm text-white/60">Дата актуальности тарифов: <time dateTime={tool.updatedAt}>{date}</time></p>
+        <TariffDateNote />
         {relatedTools.length > 0 && (
           <section aria-labelledby="related-tools" className="space-y-4">
             <h2 id="related-tools" className="text-xl md:text-2xl">Смежные инструменты</h2>
