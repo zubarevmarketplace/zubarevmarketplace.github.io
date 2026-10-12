@@ -19,8 +19,11 @@ const metric = (result: UnitEconomicsResult, target: PriceTarget): number =>
   target.kind === 'marginPercent' ? result.margin ?? -Infinity : result.profit;
 
 /** Lowest whole-ruble price that meets the target; economics stay in the shared calculator. */
-export function findPriceForTarget(input: CalculatorInput, target: PriceTarget, model: ResultMode): PriceSolution | null {
-  const range = getPriceRange(input);
+export function findPriceForTarget(input: CalculatorInput, target: PriceTarget, model: ResultMode, priceRange?: { min: number; max: number }): PriceSolution | null {
+  const defaultRange = getPriceRange(input);
+  const range = priceRange ?? defaultRange;
+  if (!defaultRange || !range || !Number.isInteger(range.min) || !Number.isInteger(range.max) ||
+      range.min < 1 || range.max > 1_000_000 || range.min > range.max) return null;
   if (!range || !Number.isFinite(target.value) || target.value < 0) return null;
   let low = range.min;
   let high = range.max;
