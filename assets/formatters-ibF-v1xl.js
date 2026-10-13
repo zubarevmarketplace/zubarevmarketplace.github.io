@@ -1,0 +1,1 @@
+const m=(r,t=0)=>new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB",maximumFractionDigits:t}).format(r),n=r=>new Intl.NumberFormat("ru-RU",{minimumFractionDigits:1,maximumFractionDigits:1}).format(r)+"%";export{n as a,m as f};

@@ -1,1 +1,0 @@
-import{j as t,d as e,f as a}from"./index-Dpbv7LkN.js";function i(){return t.jsxs("p",{className:"text-sm leading-relaxed text-white/60",children:["Тарифы актуальны на ",t.jsx("time",{dateTime:e.updatedAt,children:a()}),"."," ","Перед поставкой сверьте с кабинетом WB."]})}export{i as T};
