@@ -1,0 +1,1 @@
+const e=[{id:"инвестиционные-драгоценные-металлы-золотые-слитки",category:"Инвестиционные драгоценные металлы",subject:"Золотые слитки",fboCommissionRate:29.5,fbsCommissionRate:29.5}];export{e as default};

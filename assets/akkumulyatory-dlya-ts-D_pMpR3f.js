@@ -1,0 +1,1 @@
+const o=[{id:"аккумуляторы-для-тс-аккумуляторы-для-мотоциклов",category:"Аккумуляторы для ТС",subject:"Аккумуляторы для мотоциклов",fboCommissionRate:18.5,fbsCommissionRate:22},{id:"аккумуляторы-для-тс-аккумуляторы-для-автомобилей",category:"Аккумуляторы для ТС",subject:"Аккумуляторы для автомобилей",fboCommissionRate:26.5,fbsCommissionRate:30}];export{o as default};

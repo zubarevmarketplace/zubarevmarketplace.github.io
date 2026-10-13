@@ -1,0 +1,1 @@
+const o=[{id:"автомобили-автомобили-с-пробегом",category:"Автомобили",subject:"Автомобили с пробегом",fboCommissionRate:.5,fbsCommissionRate:.5},{id:"автомобили-автомобили-новые",category:"Автомобили",subject:"Автомобили новые",fboCommissionRate:.5,fbsCommissionRate:.5}];export{o as default};

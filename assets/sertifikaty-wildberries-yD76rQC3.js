@@ -1,0 +1,1 @@
+const e=[{id:"сертификаты-wildberries-физические-подарочные-сертификаты-wildberries",category:"Сертификаты Wildberries",subject:"Физические подарочные сертификаты Wildberries",fboCommissionRate:23.5,fbsCommissionRate:23.5}];export{e as default};
