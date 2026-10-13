@@ -17,6 +17,7 @@ param(
   [string]$ReviewEffort = "medium",
   [int]$MaxTasks = 50,
   [int]$MaxFixRounds = 2,
+  [string]$SandboxMode = "danger-full-access",
   [switch]$NoPush,
   [switch]$Once
 )
@@ -69,8 +70,9 @@ function Set-TaskStatus($id, $status) {
 
 function Invoke-Codex($prompt, $outFile, $model, $effort, $sandbox, $ephemeral) {
   $streamLog = "$outFile.stream.log"
-  # windows.sandbox=unelevated: режим elevated на этой машине падает с helper_unknown_error и блокирует все команды
-  $args = @("exec", "-m", $model, "-c", "model_reasoning_effort=`"$effort`"", "-c", "windows.sandbox=`"unelevated`"", "-s", $sandbox,
+  # Песочница Codex на этой машине сломана (elevated: helper_unknown_error, unelevated: EPERM на запись),
+  # поэтому по решению владельца от 2026-10-13 раннер запускает Codex без песочницы ($SandboxMode).
+  $args = @("exec", "-m", $model, "-c", "model_reasoning_effort=`"$effort`"", "-s", $sandbox,
             "--skip-git-repo-check", "--color", "never", "-C", $Repo, "-o", $outFile)
   if ($ephemeral) { $args += "--ephemeral" }
   $args += "-"
@@ -166,7 +168,7 @@ try {
         $prompt = $implTemplate.Replace("{{SPEC}}", $spec).Replace("{{FEEDBACK}}", $feedback)
         $implOut = Join-Path $taskWork "impl-$round.md"
         Log "Раунд $round. Исполнитель ($Model/$Effort) запущен."
-        $impl = Invoke-Codex $prompt $implOut $Model $Effort "workspace-write" $false
+        $impl = Invoke-Codex $prompt $implOut $Model $Effort $SandboxMode $false
         Log ("Исполнитель завершил работу, код " + $impl.Code + ".")
         Append-Text $script:RunLog ("`n### Отчёт исполнителя, раунд $round`n`n" + $impl.Text + "`n")
       }
@@ -189,7 +191,7 @@ try {
         $reviewOut = Join-Path $taskWork "review-$round-$attempt.md"
         Log "Ревьюер ($ReviewModel/$ReviewEffort) запущен, попытка $attempt."
         $diffBefore = Get-DiffFingerprint
-        $review = Invoke-Codex $reviewPrompt $reviewOut $ReviewModel $ReviewEffort "workspace-write" $true
+        $review = Invoke-Codex $reviewPrompt $reviewOut $ReviewModel $ReviewEffort $SandboxMode $true
         if ((Get-DiffFingerprint) -ne $diffBefore) { Log "ВНИМАНИЕ: ревьюер изменил файлы, хотя это запрещено. Проверьте git diff." }
         $envFailure = ($review.Text -match '(?m)^\s*VERDICT:\s*RETRY') -or ($review.Text -match 'helper_unknown_error') -or ($review.Text.Trim().Length -eq 0)
         if (-not $envFailure) { break }
