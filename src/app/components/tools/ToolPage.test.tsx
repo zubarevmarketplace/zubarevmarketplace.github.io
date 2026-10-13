@@ -6,7 +6,7 @@ import ToolsIndexPage from '../../pages/ToolsIndexPage';
 import ToolPage from './ToolPage';
 import TariffDateNote from './TariffDateNote';
 import WbCalculatorPage from '../../pages/WbCalculatorPage';
-import { tariffRegistry } from '../../config/tariffRegistry';
+import { formatTariffDate, tariffRegistry } from '../../config/tariffRegistry';
 import StructuredData from './StructuredData';
 
 function readJsonLd(html: string): Record<string, unknown> {
@@ -39,6 +39,7 @@ describe('шаблон инструмента', () => {
   });
   it('калькулятор и ToolPage показывают одну дату из справочника, независимо от даты инструмента', () => {
     const note = renderToStaticMarkup(<TariffDateNote />);
+    expect(note).toContain(`<time dateTime="${tariffRegistry.meta.updatedAt}">${formatTariffDate(tariffRegistry.meta.updatedAt)}</time>`);
     const tool = { ...tools[0], updatedAt: '1999-01-01' };
     const html = renderToStaticMarkup(
       <ToolPage tool={tool} howItWorks={<p>Формула</p>}><div>Результат</div></ToolPage>,

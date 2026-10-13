@@ -1,6 +1,8 @@
 import commissionTariffs from '../../calculator/data/commissionTariffs.json';
-import tariffMeta from '../../calculator/data/tariffMeta.json';
+import { tariffMeta } from './tariffMeta';
 import { warehouseTariffs } from '../../calculator/config/warehouseTariffs';
+
+export { tariffMeta, formatTariffDate } from './tariffMeta';
 
 export type CommissionTariff = {
   id: string;
@@ -70,11 +72,7 @@ const geoPresets: Record<'allRussia' | 'cfo' | 'moscow', GeoPreset> = {
 };
 
 export const tariffRegistry = {
-  meta: {
-    ...tariffMeta,
-    source: 'Тарифы WB из личного кабинета, файлы в data/raw',
-    nextReviewHint: 'проверяйте тарифы в кабинете WB перед поставкой',
-  },
+  meta: tariffMeta,
   wb: {
     commissions: commissionTariffs,
     warehouses: warehouseTariffs,
@@ -94,13 +92,4 @@ export function findCommission(tariffId: string): CommissionTariff | undefined {
 export function listCategories(): string[] {
   return [...new Set(tariffRegistry.wb.commissions.map((tariff) => tariff.category))]
     .sort((left, right) => left.localeCompare(right, 'ru'));
-}
-
-export function formatTariffDate(date: string = tariffRegistry.meta.updatedAt): string {
-  return new Intl.DateTimeFormat('ru-RU', {
-    day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
-  }).formatToParts(new Date(date))
-    .filter((part) => ['day', 'month', 'year'].includes(part.type))
-    .map((part) => part.value)
-    .join(' ');
 }

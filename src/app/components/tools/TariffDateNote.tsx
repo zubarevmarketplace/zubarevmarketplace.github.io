@@ -1,9 +1,9 @@
-import { formatTariffDate, tariffRegistry } from '../../config/tariffRegistry';
+import { formatTariffDate, tariffMeta } from '../../config/tariffMeta';
 
 export default function TariffDateNote() {
   return (
     <p className="text-sm leading-relaxed text-white/60">
-      Тарифы актуальны на <time dateTime={tariffRegistry.meta.updatedAt}>{formatTariffDate()}</time>.
+      Тарифы актуальны на <time dateTime={tariffMeta.updatedAt}>{formatTariffDate()}</time>.
       {' '}Перед поставкой сверьте с кабинетом WB.
     </p>
   );

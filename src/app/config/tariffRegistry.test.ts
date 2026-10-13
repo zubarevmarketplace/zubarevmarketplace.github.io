@@ -5,6 +5,7 @@ import { warehouseTariffs } from '../../calculator/config/warehouseTariffs';
 import { defaults, palletConfig } from './tariffs';
 import { geoPresets } from './geoPresets';
 import { findCommission, formatTariffDate, listCategories, tariffRegistry } from './tariffRegistry';
+import { tariffMeta as sharedMeta, formatTariffDate as formatSharedDate } from './tariffMeta';
 
 describe('единый справочник тарифов WB', () => {
   it('находит запись по id и возвращает undefined для неизвестного id', () => {
@@ -22,6 +23,8 @@ describe('единый справочник тарифов WB', () => {
   });
 
   it('использует общие метаданные и сохраняет совместимость импортов', () => {
+    expect(tariffRegistry.meta).toBe(sharedMeta);
+    expect(formatTariffDate).toBe(formatSharedDate);
     expect(tariffRegistry.meta.updatedAt).toBe(tariffMeta.updatedAt);
     expect(tariffRegistry.meta.updatedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(tariffRegistry.wb.commissions).toBe(commissionTariffs);

@@ -19,4 +19,14 @@ export default defineConfig({
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
+
+  build: {
+    modulePreload: {
+      // WB-страницы загрузят расчётный чанк своими статическими импортами.
+      // Его URL не нужен в общей таблице предзагрузки остальных маршрутов.
+      resolveDependencies: (_filename, dependencies) => dependencies.filter(
+        (dependency) => !dependency.includes('/calculateUnitEconomics-'),
+      ),
+    },
+  },
 })

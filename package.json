@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "preview": "vite preview",
     "build": "tsx scripts/prerender.ts && tsx scripts/generate-sitemap.ts",
     "generate:wb-tariffs": "tsx scripts/generate-wb-tariffs.ts",
     "submit:indexnow": "tsx scripts/submit-indexnow.ts",
