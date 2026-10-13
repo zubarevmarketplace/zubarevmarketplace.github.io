@@ -15,6 +15,7 @@
 | 005 | done | Инструмент «Точка безубыточности и цена для акции» /tools/break-even | docs/tasks/005-break-even.md |
 | 006 | done | Инструмент «ДРР и рекламный бюджет» /tools/drr | docs/tasks/006-drr-budget.md |
 | 007 | done | Инструмент «FBO или FBS» /tools/fbo-vs-fbs | docs/tasks/007-fbo-vs-fbs.md |
+| 008 | todo | Не грузить справочник тарифов на страницах без расчётов (чанк 1,6 МБ) | docs/tasks/008-split-tariff-chunk.md |
 
 ## Волна 2 (ТЗ будут написаны после приёмки волны 1)
 
