@@ -13,6 +13,9 @@ const outputs = [
   'src/calculator/data/commissionTariffs.json',
   'src/calculator/config/warehouseTariffs.ts',
   'src/calculator/data/tariffMeta.json',
+  'src/calculator/data/commissionCategories.json',
+  'src/calculator/data/commissionSubjects.json',
+  'src/calculator/data/commissions/testovaya-kategoriya.json',
 ];
 
 describe('защита результатов генерации тарифов', () => {

@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { build } from 'vite';
 import { applyPrerender } from '../src/ssg/template';
+import { generateCommissionReference } from './generate-wb-commissions';
 
 type ServerEntry = {
   render: (url: string) => Promise<{ html: string; head: string }>;
@@ -10,6 +11,8 @@ type ServerEntry = {
 };
 
 async function main() {
+  // Regenerate derived files without changing the source rates or tariff date.
+  generateCommissionReference();
   // Vite's build API runs the same client and SSR builds without shell-specific
   // command quoting or a recursive npm build invocation.
   await build();

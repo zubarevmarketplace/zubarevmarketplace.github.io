@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import xlsx from "xlsx";
+import { writeCommissionReference } from './generate-wb-commissions';
 
 const root = process.cwd();
 
@@ -391,6 +392,7 @@ fs.writeFileSync(
   "utf8",
 );
 fs.writeFileSync(warehouseOut, warehouseTs, "utf8");
+writeCommissionReference(commissionTariffs, root);
 // Дата генерации в часовом поясе WB: ночью в Москве UTC ещё может быть вчера.
 const updatedAt = new Intl.DateTimeFormat("en-CA", {
   timeZone: "Europe/Moscow",

@@ -31,16 +31,22 @@ describe('шаблон контентной страницы', () => {
 
 describe('хаб справочников', () => {
   it('скрывает карточки ещё не опубликованных разделов', () => {
-    const html = renderToStaticMarkup(<ReferenceIndexPage page={reference} />);
-    for (const section of referenceSections) expect(html).not.toContain('href="' + section.path + '"');
-    expect(html).toContain('Справочные материалы готовятся к публикации.');
-    expect(html).toContain('href="/tools/wb-calculator"');
+    // Isolate an empty catalog; the real registry can already contain sections.
+    const originalPages = contentPages.splice(0, contentPages.length, reference);
+    try {
+      const html = renderToStaticMarkup(<ReferenceIndexPage page={reference} />);
+      for (const section of referenceSections) expect(html).not.toContain('href="' + section.path + '"');
+      expect(html).toContain('Справочные материалы готовятся к публикации.');
+      expect(html).toContain('href="/tools/wb-calculator"');
+    } finally {
+      contentPages.splice(0, contentPages.length, ...originalPages);
+    }
   });
 
   it('автоматически показывает карточку опубликованного раздела', () => {
     const section = referenceSections[0];
     const addedPage = { ...reference, path: section.path, h1: section.label, description: 'Описание опубликованного раздела' };
-    contentPages.push(addedPage);
+    const originalPages = contentPages.splice(0, contentPages.length, reference, addedPage);
     try {
       const html = renderToStaticMarkup(<ReferenceIndexPage page={reference} />);
       expect(html).toContain('href="' + section.path + '"');
@@ -48,7 +54,7 @@ describe('хаб справочников', () => {
       expect(html).toContain(addedPage.description);
       expect(html).not.toContain('Справочные материалы готовятся к публикации.');
     } finally {
-      contentPages.pop();
+      contentPages.splice(0, contentPages.length, ...originalPages);
     }
   });
 });
