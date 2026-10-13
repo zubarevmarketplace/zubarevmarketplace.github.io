@@ -17,6 +17,23 @@
 | 007 | done | Инструмент «FBO или FBS» /tools/fbo-vs-fbs | docs/tasks/007-fbo-vs-fbs.md |
 | 008 | todo | Не грузить справочник тарифов на страницах без расчётов (чанк 1,6 МБ) | docs/tasks/008-split-tariff-chunk.md |
 
-## Волна 2 (ТЗ будут написаны после приёмки волны 1)
+## Волна 2
 
-Справочники: комиссии WB по категориям (страница на категорию), склады WB, словарь селлера, лимиты полей карточки. Шаблоны: Excel юнит-экономики, чек-лист запуска. Инструменты: логистика и хранение WB, приёмка, СПП, налоги селлера, литраж упаковки.
+| id | status | title | spec |
+| --- | --- | --- | --- |
+| 009 | todo | Реестр контентных страниц, раздел /reference, шаблон страницы справочника | docs/tasks/009-content-pages.md |
+| 010 | todo | Справочник комиссий WB по категориям | docs/tasks/010-wb-commissions-reference.md |
+| 011 | todo | Справочник складов WB | docs/tasks/011-wb-warehouses-reference.md |
+| 012 | todo | Словарь селлера | docs/tasks/012-glossary.md |
+| 013 | todo | Лимиты полей карточки и счётчик символов /tools/char-counter | docs/tasks/013-card-limits-and-char-counter.md |
+| 014 | todo | Калькулятор логистики и хранения WB /tools/wb-logistics | docs/tasks/014-wb-logistics.md |
+| 015 | todo | Литраж, паллеты и приёмка WB /tools/wb-volume | docs/tasks/015-wb-acceptance-volume.md |
+| 016 | todo | Калькулятор СПП /tools/spp | docs/tasks/016-spp.md |
+| 017 | todo | Калькулятор налогов селлера /tools/seller-tax | docs/tasks/017-seller-tax.md |
+| 018 | todo | Шаблоны Excel /templates | docs/tasks/018-excel-templates.md |
+| 019 | todo | Интерактивные чек-листы /reference/checklists | docs/tasks/019-checklists.md |
+| 020 | todo | Блок инструментов и справочников на главной, перелинковка | docs/tasks/020-homepage-links.md |
+
+## Волна 3 (после приёмки волны 2)
+
+Инструменты: ABC-анализ по CSV, экспресс-диагностика SKU, стоимость возвратов, оборачиваемость и точка заказа, калькулятор поставки, проверка EAN-13 и генератор штрихкодов, этикетки WB/Ozon, стоп-слова, UTM. Статьи в связке с инструментами. Калькулятор Ozon после сбора тарифов.
