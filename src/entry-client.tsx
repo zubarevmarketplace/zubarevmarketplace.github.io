@@ -82,8 +82,10 @@ async function mount() {
   // Loading first keeps the initial tree identical to the server tree, while
   // Vite still emits a separate client chunk for every registry loader.
   const Tool = route.kind === 'tool' ? (await route.tool.load()).default : null;
+  const Content = route.kind === 'content' ? (await route.page.load()).default : null;
   const page = route.kind === 'home' ? <App />
     : route.kind === 'tools' ? <ToolsIndexPage />
+    : route.kind === 'content' && Content ? <Content page={route.page} />
     : Tool ? <Tool /> : <NotFoundPage />;
   const tree = <React.StrictMode>{page}</React.StrictMode>;
 

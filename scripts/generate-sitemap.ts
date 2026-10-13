@@ -1,9 +1,15 @@
 import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { tools } from '../src/app/tools/registry';
-import { generateSitemap } from '../src/app/tools/sitemap';
+import { pathToFileURL } from 'node:url';
 
-writeFile(resolve('dist/sitemap.xml'), generateSitemap(tools), 'utf8').catch((error: unknown) => {
+async function main() {
+  const { renderSitemap } = await import(pathToFileURL(resolve('dist-ssr/entry-server.js')).href) as {
+    renderSitemap: () => string;
+  };
+  await writeFile(resolve('dist/sitemap.xml'), renderSitemap(), 'utf8');
+}
+
+main().catch((error: unknown) => {
   console.error('[generate-sitemap] Ошибка:', error);
   process.exitCode = 1;
 });

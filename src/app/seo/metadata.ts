@@ -1,6 +1,10 @@
 import { tools, type ToolDefinition } from '../tools/registry';
 import { resolveRoute } from '../tools/routes';
 import { homeStructuredData } from './homeStructuredData';
+import type { ContentPageDefinition } from '../content/registry';
+import { escapeHtml } from './escapeHtml';
+
+export { escapeHtml } from './escapeHtml';
 
 export type PageMetadata = {
   title: string;
@@ -42,6 +46,7 @@ export function getPageMetadata(pathname: string): PageMetadata {
   if (route.kind === 'tool') {
     return getToolMetadata(route.tool);
   }
+  if (route.kind === 'content') return getContentMetadata(route.page);
   return {
     title: 'Страница не найдена — Zubarev Lab',
     description: 'Проверьте адрес или выберите бесплатный инструмент для продавцов Wildberries и Ozon.',
@@ -68,10 +73,19 @@ export function getToolMetadata(tool: ToolDefinition): PageMetadata {
   };
 }
 
-export function escapeHtml(value: string): string {
-  return value.replace(/[&<>"']/g, (character) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  })[character]!);
+export function getContentMetadata(page: ContentPageDefinition): PageMetadata {
+  return {
+    title: page.title,
+    description: page.description,
+    canonical: origin + page.path,
+    ogImage: defaultImage,
+    structuredData: [{
+      '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+      itemListElement: page.breadcrumbs.map(({ label, path }, index) => ({
+        '@type': 'ListItem', position: index + 1, name: label, item: origin + path,
+      })),
+    }],
+  };
 }
 
 export function serializeStructuredData(data: Record<string, unknown>): string {

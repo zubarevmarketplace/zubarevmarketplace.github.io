@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import SiteLogo from './SiteLogo';
 
 type HeaderProps = {
-  currentPage: 'home' | 'calculator' | 'tools';
+  currentPage: 'home' | 'calculator' | 'tools' | 'reference';
 };
 
 const landingLinks = [
@@ -68,7 +68,7 @@ export default function Header({ currentPage }: HeaderProps) {
           <SiteLogo className="w-[58px] h-[58px] md:w-[67px] md:h-[67px]" />
         </a>
 
-        <div className="hidden md:flex flex-1 items-center justify-center gap-4 lg:gap-8 xl:gap-10 min-w-0">
+        <div className="hidden lg:flex flex-1 items-center justify-center gap-3 xl:gap-6 min-w-0">
           {landingLinks.map((link) => (
             <a key={link.label} href={link.href} className="text-sm text-white/60 hover:text-white/90 transition-colors whitespace-nowrap">
               {link.label}
@@ -87,15 +87,22 @@ export default function Header({ currentPage }: HeaderProps) {
           >
             Инструменты
           </a>
+          <a
+            href="/reference"
+            aria-current={currentPage === 'reference' ? 'page' : undefined}
+            className={`text-sm transition-colors whitespace-nowrap ${currentPage === 'reference' ? 'text-white' : 'text-white/60 hover:text-white/90'}`}
+          >
+            Справочники
+          </a>
         </div>
 
-        <div className="hidden md:flex items-center shrink-0">
+        <div className="hidden lg:flex items-center shrink-0">
           <a href="/#contacts" className="cta-button px-5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm transition-all whitespace-nowrap" data-cta="primary">
             Связаться
           </a>
         </div>
 
-        <div className="flex md:hidden items-center shrink-0 ml-auto">
+        <div className="flex lg:hidden items-center shrink-0 ml-auto">
           <button
             onClick={() => setMobileMenuOpen((prev) => !prev)}
             className="p-2 text-white/70 hover:text-white transition-colors"
@@ -109,7 +116,7 @@ export default function Header({ currentPage }: HeaderProps) {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 z-[110] border-b border-white/10 bg-[#08131a]/96 supports-[backdrop-filter]:backdrop-blur-[16px] supports-[backdrop-filter]:bg-[linear-gradient(180deg,rgba(7,13,18,0.97),rgba(5,10,14,0.94))]">
+        <div className="lg:hidden absolute top-full left-0 right-0 z-[110] border-b border-white/10 bg-[#08131a]/96 supports-[backdrop-filter]:backdrop-blur-[16px] supports-[backdrop-filter]:bg-[linear-gradient(180deg,rgba(7,13,18,0.97),rgba(5,10,14,0.94))]">
           <div ref={mobileMenuRef} id="mobile-main-menu" className="max-w-[1400px] mx-auto px-5 py-5 space-y-3 mobile-menu" data-glass="true">
             {landingLinks.map((link) => (
               <a
@@ -135,6 +142,14 @@ export default function Header({ currentPage }: HeaderProps) {
               className={`block transition-colors py-2 ${currentPage === 'tools' ? 'text-white' : 'text-white/70 hover:text-white'}`}
             >
               Инструменты
+            </a>
+            <a
+              href="/reference"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-current={currentPage === 'reference' ? 'page' : undefined}
+              className={`block transition-colors py-2 ${currentPage === 'reference' ? 'text-white' : 'text-white/70 hover:text-white'}`}
+            >
+              Справочники
             </a>
             <a
               href="/#contacts"

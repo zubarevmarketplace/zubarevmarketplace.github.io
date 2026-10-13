@@ -2,20 +2,22 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { build } from 'vite';
-import { tools } from '../src/app/tools/registry';
 import { applyPrerender } from '../src/ssg/template';
 
-type ServerEntry = { render: (url: string) => Promise<{ html: string; head: string }> };
+type ServerEntry = {
+  render: (url: string) => Promise<{ html: string; head: string }>;
+  getPrerenderPaths: () => string[];
+};
 
 async function main() {
   // Vite's build API runs the same client and SSR builds without shell-specific
   // command quoting or a recursive npm build invocation.
   await build();
   await build({ build: { ssr: 'src/entry-server.tsx', outDir: 'dist-ssr' } });
-  const { render } = await import(pathToFileURL(resolve('dist-ssr/entry-server.js')).href) as ServerEntry;
+  const { render, getPrerenderPaths } = await import(pathToFileURL(resolve('dist-ssr/entry-server.js')).href) as ServerEntry;
   // Read the untouched template once, before overwriting the home entry.
   const template = await readFile(resolve('dist/index.html'), 'utf8');
-  const routes = new Set(['/', '/calculator', '/tools', ...tools.map((tool) => '/tools/' + tool.slug)]);
+  const routes = getPrerenderPaths();
   for (const route of routes) {
     const { html, head } = await render(route);
     const directory = resolve('dist', route.slice(1));

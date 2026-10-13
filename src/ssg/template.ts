@@ -1,4 +1,4 @@
-import { escapeHtml } from '../app/seo/metadata';
+import { escapeHtml } from '../app/seo/escapeHtml';
 
 export function applyPrerender(template: string, route: string, html: string, head: string): string {
   if (!template.includes('<div id="root"></div>') || !template.includes('</head>')) {
