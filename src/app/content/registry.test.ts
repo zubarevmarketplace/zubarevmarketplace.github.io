@@ -27,6 +27,11 @@ describe('реестр контентных страниц', () => {
       expect(resolveRoute(crumb.path).kind).not.toBe('not-found');
     }
     for (const target of page.related ?? []) {
+      // Task 014's logistics tool is registered as a future link, as AGENTS.md requires.
+      if (target === '/tools/wb-logistics' && !tools.some((tool) => tool.slug === 'wb-logistics')) {
+        expect(resolveContentLink(target)).toBeUndefined();
+        continue;
+      }
       expect(resolveContentLink(target), page.path + ' → ' + target).toBeDefined();
     }
   });

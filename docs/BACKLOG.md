@@ -23,7 +23,7 @@
 | --- | --- | --- | --- |
 | 009 | done | Реестр контентных страниц, раздел /reference, шаблон страницы справочника | docs/tasks/009-content-pages.md |
 | 010 | done | Справочник комиссий WB по категориям | docs/tasks/010-wb-commissions-reference.md |
-| 011 | todo | Справочник складов WB | docs/tasks/011-wb-warehouses-reference.md |
+| 011 | done | Справочник складов WB | docs/tasks/011-wb-warehouses-reference.md |
 | 012 | todo | Словарь селлера | docs/tasks/012-glossary.md |
 | 013 | todo | Лимиты полей карточки и счётчик символов /tools/char-counter | docs/tasks/013-card-limits-and-char-counter.md |
 | 014 | todo | Калькулятор логистики и хранения WB /tools/wb-logistics | docs/tasks/014-wb-logistics.md |

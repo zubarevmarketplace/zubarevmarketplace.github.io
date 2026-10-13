@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import xlsx from "xlsx";
 import { writeCommissionReference } from './generate-wb-commissions';
+import { writeWarehouseIndex } from './generate-wb-warehouses';
+import { slugify as warehouseSlugify } from '../src/app/lib/slugify';
 
 const root = process.cwd();
 
@@ -308,6 +310,7 @@ const warehouseRows = xlsx.utils.sheet_to_json<Record<string, unknown>>(
 
 const warehouseCandidates: Partial<Record<WarehouseKey, WarehouseCandidate>> =
   {};
+const allWarehouseRows: WarehouseTariff[] = [];
 
 for (const row of warehouseRows) {
   const label = String(
@@ -317,7 +320,6 @@ for (const row of warehouseRows) {
   if (!label) continue;
 
   const key = getWarehouseKey(label);
-  if (!key) continue;
 
   const logistics = parseWarehouseCoefficient(
     getCell(row, [
@@ -343,6 +345,9 @@ for (const row of warehouseRows) {
     continue;
   }
 
+  allWarehouseRows.push({ label, logistics, storage, fbs });
+  if (!key) continue;
+
   const candidate: WarehouseCandidate = {
     key,
     label,
@@ -363,7 +368,7 @@ for (const row of warehouseRows) {
   }
 }
 
-const warehouseTariffs: Partial<Record<WarehouseKey, WarehouseTariff>> = {};
+const warehouseTariffs: Record<string, WarehouseTariff> = {};
 
 for (const key of REQUIRED_WAREHOUSES) {
   const candidate = warehouseCandidates[key];
@@ -380,6 +385,20 @@ for (const key of REQUIRED_WAREHOUSES) {
   };
 }
 
+// Keep the calculator's seven keys and selected rows unchanged. Other rows,
+// including special-purpose warehouses, keep their full source identity.
+// Only box coefficients belong here: pallet tariffs use a different base.
+const selectedLabels = new Set(Object.values(warehouseTariffs).map((row) => row.label));
+for (const row of allWarehouseRows) {
+  if (selectedLabels.has(row.label)) continue;
+  const base = warehouseSlugify(row.label) || 'warehouse';
+  let key = base;
+  let suffix = 2;
+  while (Object.hasOwn(warehouseTariffs, key)) key = base + '-' + suffix++;
+  warehouseTariffs[key] = row;
+  selectedLabels.add(row.label);
+}
+
 const warehouseTs = `export const warehouseTariffs = ${JSON.stringify(
   warehouseTariffs,
   null,
@@ -392,6 +411,7 @@ fs.writeFileSync(
   "utf8",
 );
 fs.writeFileSync(warehouseOut, warehouseTs, "utf8");
+writeWarehouseIndex(warehouseTariffs, root);
 writeCommissionReference(commissionTariffs, root);
 // Дата генерации в часовом поясе WB: ночью в Москве UTC ещё может быть вчера.
 const updatedAt = new Intl.DateTimeFormat("en-CA", {
